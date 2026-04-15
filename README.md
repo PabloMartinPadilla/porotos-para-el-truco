@@ -22,6 +22,7 @@ Tanteador de Truco con estética campera uruguaya. Llevá el puntaje con porotos
 |-------------|-------------------------------------------|
 | UI          | HTML + CSS + JavaScript (ES Modules)      |
 | Build       | [Vite 4](https://v4.vitejs.dev/)          |
+| PWA         | [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) + Workbox |
 | Persistencia| `localStorage` (sin backend)              |
 
 Sin frameworks ni librerías de runtime.
@@ -42,7 +43,21 @@ npm run build
 
 # 4. Previsualizar el build localmente
 npm run preview
+
+# (Opcional) Regenerar íconos PNG desde public/icon.svg
+npm run icons
 ```
+
+## Instalar como app (PWA)
+
+La app es una Progressive Web App — se puede instalar en el celular sin pasar por ninguna tienda:
+
+- **Android (Chrome):** abrí el link de GitHub Pages → menú ⋮ → *"Agregar a pantalla de inicio"*
+- **iPhone (Safari):** abrí el link → botón compartir → *"Agregar a pantalla de inicio"*
+
+Una vez instalada funciona offline y se abre como app nativa.
+
+---
 
 ## Deploy en GitHub Pages
 
@@ -64,7 +79,14 @@ El repositorio incluye un workflow de GitHub Actions que buildea y publica autom
 TanteadorTruco/
 │
 ├── public/
-│   └── icon.svg            # Ícono SVG de la app (servido estático por Vite)
+│   ├── icon.svg                  # Ícono SVG fuente
+│   └── icons/
+│       ├── icon-192.png          # Ícono PWA 192×192
+│       ├── icon-512.png          # Ícono PWA 512×512
+│       └── apple-touch-icon.png  # Ícono para iOS 180×180
+│
+├── scripts/
+│   └── generate-icons.js   # Genera los PNGs desde icon.svg (node scripts/generate-icons.js)
 │
 ├── src/
 │   ├── main.js             # Punto de entrada — inicializa listeners y navegación
@@ -76,7 +98,7 @@ TanteadorTruco/
 │   └── constants.js        # Claves de localStorage y labels de reglas
 │
 ├── index.html              # Entry point de Vite
-├── vite.config.js          # Configuración de Vite
+├── vite.config.js          # Configuración de Vite + PWA
 ├── .editorconfig           # Consistencia de formato entre editores
 ├── .gitignore
 └── package.json
