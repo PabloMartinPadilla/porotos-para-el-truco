@@ -947,8 +947,8 @@ input {
 .btn-revancha {
     width: 100%;
     padding: 13px;
-    background: var(--green);
-    color: var(--text);
+    background: var(--gold-dark);
+    color: var(--bg);
     border-radius: 6px;
     font-size: 0.9rem;
     letter-spacing: 0.12em;
@@ -957,7 +957,7 @@ input {
     font-family: inherit;
     transition: background 0.2s;
 }
-.btn-revancha:hover  { background: var(--green-hover); }
+.btn-revancha:hover  { background: var(--gold); }
 .btn-revancha:active { transform: scale(0.98); }
 
 .resultado-divider {
@@ -1031,14 +1031,14 @@ input {
     font-size: 0.62rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #8ab855;
-    border: 1px solid rgba(138, 184, 85, 0.4);
+    color: var(--gold);
+    border: 1px solid rgba(212, 160, 23, 0.4);
     border-radius: 4px;
     padding: 1px 6px;
 }
 
 .historial-item-revancha {
-    border-color: rgba(138, 184, 85, 0.25);
+    border-color: rgba(212, 160, 23, 0.25);
 }
 
 .historial-date {
