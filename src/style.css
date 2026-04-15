@@ -33,7 +33,19 @@
     --text-muted:    #7a5530;
     --text-dim:      #b09878;
     --shadow:        rgba(0,0,0,0.12);
+    /* Acento: terracota más cálido, menos crudo sobre crema */
+    --accent:        #a83a10;
+    --accent-hover:  #c04820;
+    --accent-light:  #cc5530;
+    --green:         #4a6128;
+    --green-hover:   #5a7530;
 }
+
+/* Botones con fondo oscuro: texto claro para que se lea bien */
+[data-theme="light"] .btn-primary,
+[data-theme="light"] .btn-acepto,
+[data-theme="light"] .btn-regla-add-confirm,
+[data-theme="light"] .btn-instalar          { color: #f5ead8; }
 
 /* Overrides para valores hardcodeados que no usan variables */
 [data-theme="light"] .btn-punto:hover        { background: #cfc09a; }
