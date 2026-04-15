@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Porotos para el Truco</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Rye&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- ── Pantalla: Inicio ─────────────────────────────────── -->
+    <div id="screen-inicio" class="screen">
+
+        <div class="inicio-header">
+            <img src="icon.svg" alt="truco" class="logo">
+            <h1>POROTOS</h1>
+            <p>para el truco</p>
+        </div>
+
+        <div class="inicio-form">
+
+            <div class="field">
+                <label for="input-team0">Equipo 1</label>
+                <input type="text" id="input-team0" placeholder="Nosotros" maxlength="20" autocomplete="off">
+                <div class="tipo-toggle">
+                    <input type="radio" name="tipo0" id="tipo0-solo" value="solo" checked>
+                    <label for="tipo0-solo">solo</label>
+                    <input type="radio" name="tipo0" id="tipo0-dupla" value="dupla">
+                    <label for="tipo0-dupla">dupla</label>
+                </div>
+            </div>
+
+            <div class="field">
+                <label for="input-team1">Equipo 2</label>
+                <input type="text" id="input-team1" placeholder="Ellos" maxlength="20" autocomplete="off">
+                <div class="tipo-toggle">
+                    <input type="radio" name="tipo1" id="tipo1-solo" value="solo" checked>
+                    <label for="tipo1-solo">solo</label>
+                    <input type="radio" name="tipo1" id="tipo1-dupla" value="dupla">
+                    <label for="tipo1-dupla">dupla</label>
+                </div>
+            </div>
+
+            <div class="field-limit">
+                <label>Hasta cuántos puntos</label>
+                <div class="limit-options">
+                    <input type="radio" name="limit" id="limit-15" value="15">
+                    <label for="limit-15">15</label>
+                    <input type="radio" name="limit" id="limit-20" value="20">
+                    <label for="limit-20">20</label>
+                    <input type="radio" name="limit" id="limit-30" value="30" checked>
+                    <label for="limit-30">30</label>
+                    <input type="radio" name="limit" id="limit-40" value="40">
+                    <label for="limit-40">40</label>
+                </div>
+            </div>
+
+            <div class="field-competitivo">
+                <label class="check-label" for="modo-competitivo">
+                    <input type="checkbox" id="modo-competitivo">
+                    <span class="check-box"></span>
+                    <span class="check-text">Modo competitivo</span>
+                </label>
+                <p class="check-hint">Acordar reglas antes de empezar</p>
+            </div>
+
+            <button class="btn-primary" id="btn-empezar">Empezar partida</button>
+
+            <button class="btn-link" id="btn-ir-historial">Ver historial</button>
+
+        </div>
+
+    </div>
+
+    <!-- ── Pantalla: Juego ──────────────────────────────────── -->
+    <div id="screen-juego" class="screen">
+
+        <div class="juego-header">
+            <div class="juego-header-left">
+                <img src="icon.svg" alt="truco">
+                <button id="game-limit-display" class="btn-limit-display" title="Cambiar puntos"></button>
+                <div id="limit-picker" class="limit-picker hidden">
+                    <button class="limit-pick-btn" data-val="15">15</button>
+                    <button class="limit-pick-btn" data-val="30">30</button>
+                    <button class="limit-pick-btn" data-val="40">40</button>
+                </div>
+            </div>
+            <div class="juego-header-right">
+                <button class="btn-reglas-badge hidden" id="reglas-badge" title="Ver reglas acordadas">competitivo</button>
+                <button class="btn-historial-link" id="btn-ir-historial-juego">Historial</button>
+                <button class="btn-inicio" id="btn-inicio-desde-juego" title="Volver al inicio">&#8962;</button>
+            </div>
+        </div>
+
+        <div class="teams-container">
+
+            <!-- Equipo 0 -->
+            <div class="team" data-team="0">
+                <div class="team-name">Nosotros</div>
+                <div class="porotos-container"></div>
+                <div class="score-number">0</div>
+                <div class="team-actions">
+                    <button class="btn-punto" data-team="0">+1</button>
+                    <button class="btn-vale" data-team="0">IV</button>
+                </div>
+            </div>
+
+            <!-- Equipo 1 -->
+            <div class="team" data-team="1">
+                <div class="team-name">Ellos</div>
+                <div class="porotos-container"></div>
+                <div class="score-number">0</div>
+                <div class="team-actions">
+                    <button class="btn-punto" data-team="1">+1</button>
+                    <button class="btn-vale" data-team="1">IV</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ── Pantalla: Resultado ──────────────────────────────── -->
+    <div id="screen-resultado" class="screen">
+
+        <button class="btn-inicio btn-inicio-resultado" id="btn-inicio-desde-resultado" title="Volver al inicio">&#8962;</button>
+
+        <div class="resultado-label">ganaron</div>
+
+        <div class="resultado-winner" id="resultado-winner-name"></div>
+
+        <div class="resultado-score-display">
+            <span class="winner-pts" id="resultado-winner-score"></span>
+            <span class="score-separator">–</span>
+            <span class="loser-pts" id="resultado-loser-score"></span>
+            <span class="loser-name-sm" id="resultado-loser-name"></span>
+        </div>
+
+        <div class="resultado-durmio hidden" id="resultado-durmio">
+            <strong id="resultado-durmio-name"></strong> durmió afuera
+        </div>
+
+        <div class="resultado-divider"></div>
+
+        <div class="resultado-actions">
+            <button class="btn-primary" id="btn-nueva-partida">Nueva partida</button>
+            <button class="btn-link" id="btn-resultado-historial">Ver historial</button>
+        </div>
+
+    </div>
+
+    <!-- ── Pantalla: Historial ──────────────────────────────── -->
+    <div id="screen-historial" class="screen">
+
+        <div class="historial-header">
+            <button class="btn-volver" id="btn-historial-volver">&#8592; Volver</button>
+            <button class="btn-inicio" id="btn-inicio-desde-historial" title="Volver al inicio">&#8962;</button>
+            <h2>Historial</h2>
+        </div>
+
+        <div id="historial-lista"></div>
+
+    </div>
+
+    <!-- ── Modal: Reglas competitivas ─────────────────────────── -->
+    <div id="modal-reglas" class="modal hidden">
+        <div class="modal-content modal-reglas-content">
+
+            <div class="modal-reglas-header">
+                <div class="modal-caller">Modo competitivo</div>
+                <div class="modal-subtitle">Acuerden las reglas antes de empezar</div>
+            </div>
+
+            <div class="reglas-lista">
+
+                <label class="regla-item" for="regla-contra-achique">
+                    <button class="btn-regla-delete btn-regla-delete-static" title="Quitar">&#x2715;</button>
+                    <div class="regla-texto">
+                        <span class="regla-nombre">Contraflor con achique</span>
+                        <span class="regla-desc">Si el rival se achica frente a una contraflor al resto se le cobrará el punto del achique</span>
+                    </div>
+                    <div class="regla-toggle-wrap">
+                        <input type="checkbox" id="regla-contra-achique" class="regla-check">
+                        <span class="regla-toggle"></span>
+                    </div>
+                </label>
+
+                <label class="regla-item" for="regla-perros">
+                    <button class="btn-regla-delete btn-regla-delete-static" title="Quitar">&#x2715;</button>
+                    <div class="regla-texto">
+                        <span class="regla-nombre">Echar los perros</span>
+                        <span class="regla-desc">Está permitido echar los perros y el rival no puede llorar</span>
+                    </div>
+                    <div class="regla-toggle-wrap">
+                        <input type="checkbox" id="regla-perros" class="regla-check">
+                        <span class="regla-toggle"></span>
+                    </div>
+                </label>
+
+                <label class="regla-item" for="regla-dicho-dicho">
+                    <button class="btn-regla-delete btn-regla-delete-static" title="Quitar">&#x2715;</button>
+                    <div class="regla-texto">
+                        <span class="regla-nombre">Lo dicho dicho está</span>
+                        <span class="regla-desc">Si algún jugador nombra algo indebido mientras está en juego, se cobra</span>
+                    </div>
+                    <div class="regla-toggle-wrap">
+                        <input type="checkbox" id="regla-dicho-dicho" class="regla-check">
+                        <span class="regla-toggle"></span>
+                    </div>
+                </label>
+
+            </div>
+
+            <!-- Formulario inline para agregar regla -->
+            <div id="regla-add-form" class="regla-add-form hidden">
+                <input type="text" id="regla-add-titulo" class="regla-add-input" placeholder="Nombre de la regla" maxlength="50" autocomplete="off">
+                <input type="text" id="regla-add-desc" class="regla-add-input regla-add-desc-input" placeholder="Descripción (opcional)" maxlength="100" autocomplete="off">
+                <div class="regla-add-actions">
+                    <button class="btn-regla-add-confirm" id="btn-regla-add-confirm">Agregar</button>
+                    <button class="btn-regla-add-cancel" id="btn-regla-add-cancel">Cancelar</button>
+                </div>
+            </div>
+
+            <button class="btn-agregar-regla" id="btn-agregar-regla">+ Agregar regla</button>
+
+            <button class="btn-primary" id="btn-confirmar-reglas">Listo, empezar</button>
+
+        </div>
+    </div>
+
+    <!-- ── Modal: Vale cuatro ───────────────────────────────── -->
+    <div id="modal-vale" class="modal hidden">
+        <div class="modal-content">
+
+            <div class="modal-caller">
+                <span id="modal-caller-name"></span> <span id="modal-verb">cantó</span> vale cuatro
+            </div>
+
+            <div class="modal-rival-display" id="modal-rival-name"></div>
+
+            <div class="modal-subtitle">¿aceptaron el vale cuatro y perdieron?</div>
+
+            <div class="modal-actions">
+                <button class="btn-acepto" id="btn-acepto-vale">Sí, perdimos</button>
+                <button class="btn-rechazo" id="btn-rechazo-vale">No acepto</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

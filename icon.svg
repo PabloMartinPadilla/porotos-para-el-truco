@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#1a1208"/>
+  <!-- Bean body -->
+  <g transform="translate(32,33) rotate(-20)">
+    <ellipse cx="0" cy="0" rx="20" ry="13" fill="#7a4e30"/>
+    <!-- Bean indent/seam -->
+    <path d="M-20,2 Q-6,-10 20,2" stroke="#5a3820" stroke-width="2" fill="none" stroke-linecap="round"/>
+    <!-- Highlight -->
+    <ellipse cx="-5" cy="-4" rx="7" ry="4" fill="#9a6840" opacity="0.5"/>
+  </g>
+  <!-- Small golden accent bean -->
+  <g transform="translate(48,16) rotate(-20) scale(0.5)">
+    <ellipse cx="0" cy="0" rx="20" ry="13" fill="#d4a017"/>
+    <path d="M-20,2 Q-6,-10 20,2" stroke="#b08000" stroke-width="2" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>
