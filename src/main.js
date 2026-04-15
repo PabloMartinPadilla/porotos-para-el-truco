@@ -7,6 +7,7 @@ import {
     animateLastPoroto,
     renderHistorialItem,
     renderHistorialSerie,
+    renderHistorialStats,
     updateLimitDisplay,
 } from './ui.js';
 import {
@@ -192,6 +193,8 @@ function endGame(winnerIndex) {
 function showHistorial() {
     const records = getAllRecords();
     const lista   = document.getElementById('historial-lista');
+
+    document.getElementById('historial-stats').innerHTML = renderHistorialStats(records);
 
     if (records.length === 0) {
         lista.innerHTML = '<p class="empty-msg">Todavía no hay partidas guardadas.</p>';

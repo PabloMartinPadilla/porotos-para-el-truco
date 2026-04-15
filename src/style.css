@@ -1258,6 +1258,55 @@ input {
 }
 .btn-hist-revancha:hover { background: rgba(212,160,23,0.12); border-color: var(--gold); }
 
+/* ── Historial: estadísticas generales ─────────────────────── */
+#historial-stats:empty { display: none; }
+
+.historial-stats {
+    padding: 14px 18px 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+}
+
+.historial-stats-title {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+}
+
+.historial-stats-grid {
+    display: flex;
+    gap: 0;
+}
+
+.stat-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.stat-item + .stat-item {
+    border-left: 1px solid var(--border);
+    padding-left: 16px;
+}
+
+.stat-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+    letter-spacing: -0.02em;
+}
+
+.stat-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
 /* ── Historial: bloque de serie ────────────────────────────── */
 .historial-serie {
     background: var(--surface);
