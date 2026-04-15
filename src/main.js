@@ -85,6 +85,7 @@ function handlePunto(teamIndex) {
     const winner = game.addPoint(teamIndex);
     renderPorotos(game, teamIndex);
     animateLastPoroto(teamIndex);
+    updateLimitDisplay(game);
     if (winner !== null) endGame(winner);
 }
 
@@ -114,6 +115,7 @@ function acceptVale() {
     const winner = game.addVale(callerIndex);
     renderPorotos(game, callerIndex);
     setTimeout(() => animateLastPoroto(callerIndex), 30);
+    updateLimitDisplay(game);
     if (winner !== null) endGame(winner);
 }
 
