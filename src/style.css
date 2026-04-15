@@ -505,23 +505,48 @@ input {
 
 .juego-header {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 18px;
+    flex-direction: column;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
 }
 
-.juego-header-left {
+.juego-header-row1 {
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    padding: 10px 16px 8px;
 }
 
-.juego-header-left img {
-    width: 28px;
-    height: 28px;
+.juego-header-row1 img {
+    width: 26px;
+    height: 26px;
     opacity: 0.7;
+}
+
+.juego-header-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.juego-header-row2 {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 10px;
+}
+
+.juego-header-left {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.juego-header-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .btn-limit-display {
@@ -535,22 +560,8 @@ input {
     cursor: pointer;
     transition: all 0.15s;
     font-family: inherit;
-    position: relative;
 }
 .btn-limit-display:hover { border-color: var(--border-light); color: var(--text); }
-
-.juego-header-left {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.juego-header-right {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
 
 .limit-picker {
     position: absolute;

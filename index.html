@@ -79,21 +79,27 @@
     <div id="screen-juego" class="screen">
 
         <div class="juego-header">
-            <div class="juego-header-left">
+            <div class="juego-header-row1">
                 <img src="icon.svg" alt="truco">
-                <button id="game-limit-display" class="btn-limit-display" title="Cambiar puntos"></button>
-                <div id="limit-picker" class="limit-picker hidden">
-                    <button class="limit-pick-btn" data-val="15">15</button>
-                    <button class="limit-pick-btn" data-val="20">20</button>
-                    <button class="limit-pick-btn" data-val="30">30</button>
-                    <button class="limit-pick-btn" data-val="40">40</button>
+                <div class="juego-header-nav">
+                    <button class="btn-sound" id="btn-sound" title="Silenciar / activar sonido">&#9834;</button>
+                    <button class="btn-inicio" id="btn-inicio-desde-juego" title="Volver al inicio">&#8962;</button>
                 </div>
             </div>
-            <div class="juego-header-right">
-                <button class="btn-reglas-badge hidden" id="reglas-badge" title="Ver reglas acordadas">competitivo</button>
-                <button class="btn-historial-link" id="btn-ir-historial-juego">Historial</button>
-                <button class="btn-sound" id="btn-sound" title="Silenciar / activar sonido">&#9834;</button>
-                <button class="btn-inicio" id="btn-inicio-desde-juego" title="Volver al inicio">&#8962;</button>
+            <div class="juego-header-row2">
+                <div class="juego-header-left">
+                    <button id="game-limit-display" class="btn-limit-display" title="Cambiar puntos"></button>
+                    <div id="limit-picker" class="limit-picker hidden">
+                        <button class="limit-pick-btn" data-val="15">15</button>
+                        <button class="limit-pick-btn" data-val="20">20</button>
+                        <button class="limit-pick-btn" data-val="30">30</button>
+                        <button class="limit-pick-btn" data-val="40">40</button>
+                    </div>
+                </div>
+                <div class="juego-header-right">
+                    <button class="btn-reglas-badge hidden" id="reglas-badge" title="Ver reglas acordadas">competitivo</button>
+                    <button class="btn-historial-link" id="btn-ir-historial-juego">Historial</button>
+                </div>
             </div>
         </div>
 
