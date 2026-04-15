@@ -944,6 +944,22 @@ input {
     max-width: 280px;
 }
 
+.btn-revancha {
+    width: 100%;
+    padding: 13px;
+    background: var(--green);
+    color: var(--text);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+.btn-revancha:hover  { background: var(--green-hover); }
+.btn-revancha:active { transform: scale(0.98); }
+
 .resultado-divider {
     width: 40px;
     height: 1px;
@@ -1003,6 +1019,26 @@ input {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.historial-meta-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.historial-revancha-badge {
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #8ab855;
+    border: 1px solid rgba(138, 184, 85, 0.4);
+    border-radius: 4px;
+    padding: 1px 6px;
+}
+
+.historial-item-revancha {
+    border-color: rgba(138, 184, 85, 0.25);
 }
 
 .historial-date {

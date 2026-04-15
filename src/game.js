@@ -9,12 +9,13 @@ export class Game {
      * @param {number} options.limit - Puntaje límite para ganar la partida.
      * @param {object|null} [options.reglas] - Reglas competitivas acordadas, o null si no aplica.
      */
-    constructor({ teamNames, isDupla, limit, reglas }) {
-        this.teamNames = teamNames;
-        this.isDupla   = isDupla || [false, false];
-        this.limit     = limit;
-        this.reglas    = reglas || null;
-        this.scores    = [0, 0];
+    constructor({ teamNames, isDupla, limit, reglas, isRevancha }) {
+        this.teamNames  = teamNames;
+        this.isDupla    = isDupla || [false, false];
+        this.limit      = limit;
+        this.reglas     = reglas || null;
+        this.isRevancha = isRevancha || false;
+        this.scores     = [0, 0];
         /** @type {Set<number>[]} Índices de porotos que corresponden a un vale cuatro. */
         this.valeIndices = [new Set(), new Set()];
     }
@@ -87,6 +88,7 @@ export class Game {
             limit:       this.limit,
             durmioAfuera: this.loserDurmioAfuera(winnerIndex),
             reglas:      this.reglas || null,
+            isRevancha:  this.isRevancha,
         };
     }
 }

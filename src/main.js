@@ -243,6 +243,28 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-acepto-vale').addEventListener('click', acceptVale);
     document.getElementById('btn-rechazo-vale').addEventListener('click', rejectVale);
 
+    document.getElementById('btn-revancha').addEventListener('click', function () {
+        game = new Game({
+            teamNames:  game.teamNames,
+            isDupla:    game.isDupla,
+            limit:      game.limit,
+            reglas:     game.reglas,
+            isRevancha: true,
+        });
+
+        document.querySelectorAll('.team-name').forEach(function (el, i) {
+            el.textContent = game.teamNames[i];
+        });
+        updateLimitDisplay(game);
+        renderPorotos(game, 0);
+        renderPorotos(game, 1);
+
+        const badge = document.getElementById('reglas-badge');
+        badge.classList.toggle('hidden', !game.reglas);
+
+        showScreen('screen-juego');
+    });
+
     document.getElementById('btn-nueva-partida').addEventListener('click', function () {
         game = null;
         showScreen('screen-inicio');

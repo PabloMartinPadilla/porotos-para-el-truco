@@ -109,10 +109,13 @@ export function renderHistorialItem(r) {
     const wi = r.winner;
     const li = 1 - wi;
 
-    return '<div class="historial-item">' +
+    return '<div class="historial-item' + (r.isRevancha ? ' historial-item-revancha' : '') + '">' +
         '<div class="historial-meta">' +
             '<span class="historial-date">' + dateStr + ' ' + timeStr + '</span>' +
-            '<span class="historial-limit">a ' + r.limit + '</span>' +
+            '<div class="historial-meta-right">' +
+                (r.isRevancha ? '<span class="historial-revancha-badge">revancha</span>' : '') +
+                '<span class="historial-limit">a ' + r.limit + '</span>' +
+            '</div>' +
         '</div>' +
         '<div class="historial-score">' +
             '<span class="historial-winner-name">' + r.teamNames[wi] + '</span>' +
