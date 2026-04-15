@@ -1068,3 +1068,68 @@ input {
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── Banner de instalación PWA ─────────────────────────────── */
+.pwa-banner {
+    position: relative;
+    width: 100%;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 12px 36px 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.pwa-banner.hidden { display: none; }
+
+.pwa-banner > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+.pwa-banner > div.hidden { display: none; }
+
+.pwa-text {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+    flex: 1;
+    line-height: 1.4;
+}
+
+.pwa-text strong {
+    color: var(--text);
+}
+
+.btn-instalar {
+    flex-shrink: 0;
+    padding: 7px 14px;
+    background: var(--accent);
+    border-radius: 6px;
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: inherit;
+    transition: background 0.2s;
+}
+.btn-instalar:hover  { background: var(--accent-hover); }
+.btn-instalar:active { transform: scale(0.97); }
+
+.pwa-dismiss {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background: none;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    padding: 2px 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.pwa-dismiss:hover { color: var(--text-muted); }

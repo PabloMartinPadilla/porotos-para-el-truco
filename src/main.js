@@ -267,4 +267,64 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     showScreen('screen-inicio');
+
+    // ── PWA: instalación ─────────────────────────────────────
+    initPWAInstall();
 });
+
+/**
+ * Muestra el banner de instalación según la plataforma:
+ * - Android/Chrome: captura beforeinstallprompt y ofrece instalar con un botón
+ * - iOS/Safari: muestra instrucciones de "Agregar a inicio"
+ * - Ya instalada o escritorio: no muestra nada
+ */
+function initPWAInstall() {
+    const banner   = document.getElementById('pwa-banner');
+    const android  = document.getElementById('pwa-android');
+    const ios      = document.getElementById('pwa-ios');
+    const dismiss  = document.getElementById('pwa-dismiss');
+    const btnInst  = document.getElementById('btn-instalar');
+
+    /** @type {BeforeInstallPromptEvent|null} */
+    let deferredPrompt = null;
+
+    const isIOS        = /iPhone|iPad|iPod/.test(navigator.userAgent);
+    const isStandalone = window.navigator.standalone === true
+        || window.matchMedia('(display-mode: standalone)').matches;
+
+    // Ya está instalada — no mostrar nada
+    if (isStandalone) return;
+
+    if (isIOS) {
+        // iOS no tiene beforeinstallprompt — mostrar instrucciones
+        banner.classList.remove('hidden');
+        ios.classList.remove('hidden');
+    } else {
+        // Android/Chrome — esperar el evento
+        window.addEventListener('beforeinstallprompt', function (e) {
+            e.preventDefault();
+            deferredPrompt = e;
+            banner.classList.remove('hidden');
+            android.classList.remove('hidden');
+        });
+
+        window.addEventListener('appinstalled', function () {
+            banner.classList.add('hidden');
+            deferredPrompt = null;
+        });
+
+        btnInst.addEventListener('click', async function () {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            if (outcome === 'accepted') {
+                banner.classList.add('hidden');
+            }
+            deferredPrompt = null;
+        });
+    }
+
+    dismiss.addEventListener('click', function () {
+        banner.classList.add('hidden');
+    });
+}
