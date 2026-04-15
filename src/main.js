@@ -41,6 +41,12 @@ let estadisticasData = [];
 /** @type {{ callerIndex: number }|null} */
 let pendingVale = null;
 
+/**
+ * Indica si el juego en curso fue lanzado desde el historial (revancha).
+ * Permite que el gesto "volver atrás" regrese al historial en vez de inicio.
+ */
+let cameFromHistorial = false;
+
 // ── Handlers ─────────────────────────────────────────────────
 
 /**
@@ -62,6 +68,7 @@ function startGame() {
  * @param {object|null} reglas - Reglas competitivas acordadas, o null.
  */
 function launchGame(reglas) {
+    cameFromHistorial = false;
     const name0   = document.getElementById('input-team0').value.trim() || 'Nosotros';
     const name1   = document.getElementById('input-team1').value.trim() || 'Ellos';
     const tipo0   = getTipo();
@@ -244,6 +251,7 @@ function showHistorial() {
 }
 
 function launchRevanchaDesdeHistorial(record) {
+    cameFromHistorial = true;
     game = new Game({
         teamNames:  record.teamNames,
         isDupla:    record.isDupla   || [false, false],
@@ -494,6 +502,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('btn-revancha').addEventListener('click', function () {
         playTap();
+        cameFromHistorial = false;
         game = new Game({
             teamNames:  game.teamNames,
             isDupla:    game.isDupla,
@@ -572,6 +581,43 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('app-version').textContent = 'v' + __APP_VERSION__;
 
     showScreen('screen-inicio');
+
+    // ── Navegación con gesto "volver" (Android / PWA) ────────
+    // Pushea un estado centinela para que el primer gesto de volver no cierre la app.
+    history.pushState(null, '');
+
+    window.addEventListener('popstate', function () {
+        var current = (document.querySelector('.screen.active') || {}).id || 'screen-inicio';
+
+        switch (current) {
+            case 'screen-estadisticas':
+                // Volver desde estadísticas → historial
+                showHistorial();
+                history.pushState(null, '');
+                break;
+
+            case 'screen-juego':
+                if (cameFromHistorial && game && game.getWinner() === null) {
+                    // Revancha lanzada desde historial: volver al historial con la partida activa
+                    cameFromHistorial = false;
+                    showHistorial();
+                    history.pushState(null, '');
+                } else {
+                    // Partida nueva desde inicio: volver al inicio y descartar
+                    cameFromHistorial = false;
+                    game = null;
+                    showScreen('screen-inicio');
+                }
+                break;
+
+            default:
+                // historial, resultado, o inicio → ir al inicio
+                cameFromHistorial = false;
+                if (current !== 'screen-inicio') { game = null; }
+                showScreen('screen-inicio');
+                break;
+        }
+    });
 
     // ── PWA: instalación ─────────────────────────────────────
     initPWAInstall();
