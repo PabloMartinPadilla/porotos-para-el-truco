@@ -595,6 +595,23 @@ input {
 }
 .btn-historial-link:hover { border-color: var(--border-light); color: var(--text); }
 
+.btn-sound {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    line-height: 1;
+    transition: all 0.15s;
+}
+.btn-sound:hover { border-color: var(--border-light); color: var(--text); }
+.btn-sound.muted {
+    color: var(--text-dim);
+    border-color: transparent;
+    text-decoration: line-through;
+}
+
 .teams-container {
     flex: 1;
     display: grid;

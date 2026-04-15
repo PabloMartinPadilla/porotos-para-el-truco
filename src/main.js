@@ -16,6 +16,14 @@ import {
     collectReglas,
     showReglasPanel,
 } from './rules.js';
+import {
+    playPunto,
+    playRestar,
+    playVale,
+    playGanador,
+    isMuted,
+    toggleMute,
+} from './sounds.js';
 
 // ── Estado global de la partida ──────────────────────────────
 /** @type {Game|null} */
@@ -87,6 +95,7 @@ function handlePunto(teamIndex) {
     animateLastPoroto(teamIndex);
     updateLimitDisplay(game);
     if (winner !== null) endGame(winner);
+    else playPunto();
 }
 
 /**
@@ -117,6 +126,7 @@ function acceptVale() {
     setTimeout(() => animateLastPoroto(callerIndex), 30);
     updateLimitDisplay(game);
     if (winner !== null) endGame(winner);
+    else playVale();
 }
 
 /**
@@ -132,6 +142,7 @@ function rejectVale() {
  * @param {number} winnerIndex - Índice del equipo ganador.
  */
 function endGame(winnerIndex) {
+    playGanador();
     const record = game.toRecord(winnerIndex);
     saveRecord(record);
 
@@ -249,6 +260,7 @@ document.addEventListener('DOMContentLoaded', function () {
             game.removePoint(teamIndex);
             renderPorotos(game, teamIndex);
             updateLimitDisplay(game);
+            playRestar();
         });
     });
 
@@ -322,6 +334,18 @@ document.addEventListener('DOMContentLoaded', function () {
             showScreen('screen-inicio');
         });
     });
+
+    // ── Botón silencio ───────────────────────────────────────
+    const btnSound = document.getElementById('btn-sound');
+    function updateSoundBtn() {
+        btnSound.classList.toggle('muted', isMuted());
+        btnSound.title = isMuted() ? 'Activar sonido' : 'Silenciar';
+    }
+    btnSound.addEventListener('click', function () {
+        toggleMute();
+        updateSoundBtn();
+    });
+    updateSoundBtn();
 
     showScreen('screen-inicio');
 
