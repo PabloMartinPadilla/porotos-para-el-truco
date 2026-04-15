@@ -243,6 +243,8 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('btn-confirmar-reglas').addEventListener('click', function () {
+        // En modo vista (showReglasPanel) el modal tiene data-vista-activa: lo cierra el onclick del botón
+        if (document.getElementById('modal-reglas').dataset.vistaActiva) return;
         playTap();
         document.getElementById('modal-reglas').classList.add('hidden');
         const reglas = collectReglas();

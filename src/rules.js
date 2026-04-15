@@ -104,27 +104,28 @@ export function collectReglas() {
  * @param {import('./game.js').Game} game - Instancia de la partida actual.
  */
 export function showReglasPanel(game) {
-    const r = game.reglas;
+    const r     = game.reglas;
+    const modal = document.getElementById('modal-reglas');
 
     document.getElementById('regla-contra-achique').checked = !!r.contraAchique;
     document.getElementById('regla-perros').checked         = !!r.perros;
     document.getElementById('regla-dicho-dicho').checked    = !!r.dichoDicho;
 
     // Modo solo lectura: deshabilitar todos los toggles
-    document.getElementById('modal-reglas').querySelectorAll('.regla-check').forEach(function (el) {
-        el.disabled = true;
-    });
+    modal.querySelectorAll('.regla-check').forEach(function (el) { el.disabled = true; });
+
+    // Marcar el modal como "vista" para que el listener de main.js no lance un nuevo juego
+    modal.dataset.vistaActiva = '1';
 
     const btnConfirmar = document.getElementById('btn-confirmar-reglas');
     btnConfirmar.textContent = 'Cerrar';
     btnConfirmar.onclick = function () {
-        document.getElementById('modal-reglas').classList.add('hidden');
+        delete modal.dataset.vistaActiva;
+        modal.classList.add('hidden');
         btnConfirmar.textContent = 'Listo, empezar';
         btnConfirmar.onclick = null;
-        document.getElementById('modal-reglas').querySelectorAll('.regla-check').forEach(function (el) {
-            el.disabled = false;
-        });
+        modal.querySelectorAll('.regla-check').forEach(function (el) { el.disabled = false; });
     };
 
-    document.getElementById('modal-reglas').classList.remove('hidden');
+    modal.classList.remove('hidden');
 }
