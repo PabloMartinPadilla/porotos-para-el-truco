@@ -52,6 +52,16 @@ function playTone({ freq, freqEnd, duration, type = 'triangle', gain = 0.28, sta
     osc.stop(t + duration + 0.01);
 }
 
+/** Toque de UI genérico — navegación, botones de formulario */
+export function playTap() {
+    playTone({ freq: 520, freqEnd: 380, duration: 0.07, type: 'sine', gain: 0.12 });
+}
+
+/** Toggle / selección — radios y checkboxes */
+export function playToggle() {
+    playTone({ freq: 440, freqEnd: 560, duration: 0.08, type: 'sine', gain: 0.10 });
+}
+
 /** +1 punto — pop corto ascendente */
 export function playPunto() {
     playTone({ freq: 280, freqEnd: 420, duration: 0.13, type: 'triangle', gain: 0.25 });

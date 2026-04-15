@@ -17,6 +17,8 @@ import {
     showReglasPanel,
 } from './rules.js';
 import {
+    playTap,
+    playToggle,
     playPunto,
     playRestar,
     playVale,
@@ -110,6 +112,7 @@ function handleVale(callerIndex) {
     document.getElementById('modal-verb').textContent = game.isDupla[callerIndex] ? 'cantaron' : 'cantó';
     document.getElementById('modal-rival-name').textContent = rivalName;
     document.getElementById('modal-vale').classList.remove('hidden');
+    playToggle();
 }
 
 /**
@@ -135,6 +138,7 @@ function acceptVale() {
 function rejectVale() {
     pendingVale = null;
     document.getElementById('modal-vale').classList.add('hidden');
+    playRestar();
 }
 
 /**
@@ -197,15 +201,49 @@ function updatePlaceholders() {
 
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
+    // ── Botones de silencio (inicio + juego, sincronizados) ──
+    const soundBtns = document.querySelectorAll('.btn-sound');
+    function updateSoundBtns() {
+        const muted = isMuted();
+        soundBtns.forEach(function (btn) {
+            btn.classList.toggle('muted', muted);
+            btn.title = muted ? 'Activar sonido' : 'Silenciar';
+        });
+    }
+    soundBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            toggleMute();
+            updateSoundBtns();
+        });
+    });
+    updateSoundBtns();
+
     // Toggle solo/dupla global
     document.querySelectorAll('input[name="tipo"]').forEach(function (radio) {
-        radio.addEventListener('change', updatePlaceholders);
+        radio.addEventListener('change', function () {
+            playToggle();
+            updatePlaceholders();
+        });
     });
     updatePlaceholders();
 
-    document.getElementById('btn-empezar').addEventListener('click', startGame);
+    // Selección de límite en inicio
+    document.querySelectorAll('input[name="limit"]').forEach(function (radio) {
+        radio.addEventListener('change', function () { playToggle(); });
+    });
+
+    // Modo competitivo
+    document.getElementById('modo-competitivo').addEventListener('change', function () {
+        playToggle();
+    });
+
+    document.getElementById('btn-empezar').addEventListener('click', function () {
+        playTap();
+        startGame();
+    });
 
     document.getElementById('btn-confirmar-reglas').addEventListener('click', function () {
+        playTap();
         document.getElementById('modal-reglas').classList.add('hidden');
         const reglas = collectReglas();
         launchGame(reglas);
@@ -216,24 +254,28 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
             e.stopPropagation();
+            playTap();
             btn.closest('.regla-item').remove();
         });
     });
 
     // Botón agregar regla
     document.getElementById('btn-agregar-regla').addEventListener('click', function () {
+        playTap();
         document.getElementById('regla-add-form').classList.remove('hidden');
         document.getElementById('btn-agregar-regla').classList.add('hidden');
         document.getElementById('regla-add-titulo').focus();
     });
 
     document.getElementById('btn-regla-add-cancel').addEventListener('click', function () {
+        playTap();
         cerrarFormRegla();
     });
 
     document.getElementById('btn-regla-add-confirm').addEventListener('click', function () {
         const titulo = document.getElementById('regla-add-titulo').value.trim();
         if (!titulo) { document.getElementById('regla-add-titulo').focus(); return; }
+        playTap();
         const desc = document.getElementById('regla-add-desc').value.trim();
         agregarReglaDinamica(titulo, desc);
         saveCustomRules();
@@ -243,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('reglas-badge').addEventListener('click', function (e) {
         e.stopPropagation();
         if (!game || !game.reglas) return;
+        playTap();
         showReglasPanel(game);
     });
 
@@ -264,16 +307,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    document.getElementById('btn-ir-historial').addEventListener('click', showHistorial);
-    document.getElementById('btn-ir-historial-juego').addEventListener('click', showHistorial);
+    document.getElementById('btn-ir-historial').addEventListener('click', function () {
+        playTap();
+        showHistorial();
+    });
+    document.getElementById('btn-ir-historial-juego').addEventListener('click', function () {
+        playTap();
+        showHistorial();
+    });
 
     // Picker de límite en pantalla de juego
     document.getElementById('game-limit-display').addEventListener('click', function (e) {
         e.stopPropagation();
+        playTap();
         document.getElementById('limit-picker').classList.toggle('hidden');
     });
     document.querySelectorAll('.limit-pick-btn').forEach(function (btn) {
         btn.addEventListener('click', function () {
+            playToggle();
             game.limit = +btn.dataset.val;
             updateLimitDisplay(game);
             document.getElementById('limit-picker').classList.add('hidden');
@@ -291,6 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-rechazo-vale').addEventListener('click', rejectVale);
 
     document.getElementById('btn-revancha').addEventListener('click', function () {
+        playTap();
         game = new Game({
             teamNames:  game.teamNames,
             isDupla:    game.isDupla,
@@ -313,13 +365,18 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     document.getElementById('btn-nueva-partida').addEventListener('click', function () {
+        playTap();
         game = null;
         showScreen('screen-inicio');
     });
 
-    document.getElementById('btn-resultado-historial').addEventListener('click', showHistorial);
+    document.getElementById('btn-resultado-historial').addEventListener('click', function () {
+        playTap();
+        showHistorial();
+    });
 
     document.getElementById('btn-historial-volver').addEventListener('click', function () {
+        playTap();
         if (game && game.getWinner() === null) {
             showScreen('screen-juego');
         } else {
@@ -330,22 +387,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Botones "volver al inicio" desde cualquier pantalla
     ['btn-inicio-desde-juego', 'btn-inicio-desde-resultado', 'btn-inicio-desde-historial'].forEach(function (id) {
         document.getElementById(id).addEventListener('click', function () {
+            playTap();
             game = null;
             showScreen('screen-inicio');
         });
     });
-
-    // ── Botón silencio ───────────────────────────────────────
-    const btnSound = document.getElementById('btn-sound');
-    function updateSoundBtn() {
-        btnSound.classList.toggle('muted', isMuted());
-        btnSound.title = isMuted() ? 'Activar sonido' : 'Silenciar';
-    }
-    btnSound.addEventListener('click', function () {
-        toggleMute();
-        updateSoundBtn();
-    });
-    updateSoundBtn();
 
     showScreen('screen-inicio');
 
