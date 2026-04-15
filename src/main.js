@@ -199,8 +199,36 @@ function updatePlaceholders() {
     });
 }
 
+// ── Tema ──────────────────────────────────────────────────────
+const THEME_KEY = 'truco-theme';
+
+function isLight() {
+    return localStorage.getItem(THEME_KEY) === 'light';
+}
+
+function applyTheme() {
+    document.documentElement.dataset.theme = isLight() ? 'light' : '';
+}
+
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
+    // ── Botones de tema (inicio + juego, sincronizados) ──────
+    const themeBtns = document.querySelectorAll('.btn-theme');
+    function updateThemeBtns() {
+        themeBtns.forEach(function (btn) {
+            btn.title = isLight() ? 'Tema oscuro' : 'Tema claro';
+        });
+    }
+    themeBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            localStorage.setItem(THEME_KEY, isLight() ? 'dark' : 'light');
+            applyTheme();
+            updateThemeBtns();
+            playTap();
+        });
+    });
+    updateThemeBtns();
+
     // ── Botones de silencio (inicio + juego, sincronizados) ──
     const soundBtns = document.querySelectorAll('.btn-sound');
     function updateSoundBtns() {

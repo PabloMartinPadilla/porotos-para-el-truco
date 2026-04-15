@@ -9,13 +9,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,400;0,700;1,400&family=Rye&display=swap" rel="stylesheet">
+    <script>(function(){if(localStorage.getItem('truco-theme')==='light')document.documentElement.dataset.theme='light';}());</script>
 </head>
 <body>
 
     <!-- ── Pantalla: Inicio ─────────────────────────────────── -->
     <div id="screen-inicio" class="screen">
 
-        <button class="btn-sound btn-sound-inicio" id="btn-sound-inicio" title="Silenciar / activar sonido">&#9834;</button>
+        <div class="inicio-corner-btns">
+            <button class="btn-theme" id="btn-theme-inicio" title="Tema claro">&#x25D1;</button>
+            <button class="btn-sound" id="btn-sound-inicio" title="Silenciar / activar sonido">&#9834;</button>
+        </div>
 
         <div class="inicio-header">
             <img src="icon.svg" alt="truco" class="logo">
@@ -82,6 +86,7 @@
             <div class="juego-header-row1">
                 <img src="icon.svg" alt="truco">
                 <div class="juego-header-nav">
+                    <button class="btn-theme" id="btn-theme-juego" title="Tema claro">&#x25D1;</button>
                     <button class="btn-sound" id="btn-sound" title="Silenciar / activar sonido">&#9834;</button>
                     <button class="btn-inicio" id="btn-inicio-desde-juego" title="Volver al inicio">&#8962;</button>
                 </div>
