@@ -571,6 +571,13 @@ input {
 }
 .limit-pick-btn:hover  { border-color: var(--border-light); color: var(--text); }
 .limit-pick-btn.active { border-color: var(--accent-light); color: var(--text); background: var(--surface); }
+.limit-pick-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: var(--border);
+    color: var(--text-dim);
+}
+.limit-pick-btn.disabled:hover { border-color: var(--border); color: var(--text-dim); }
 
 .btn-historial-link {
     background: none;

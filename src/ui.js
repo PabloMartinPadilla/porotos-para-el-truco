@@ -133,9 +133,16 @@ export function renderHistorialItem(r) {
  * @param {import('./game.js').Game} game - Instancia de la partida actual.
  */
 export function updateLimitDisplay(game) {
-    const btn = document.getElementById('game-limit-display');
+    const btn     = document.getElementById('game-limit-display');
     btn.textContent = 'hasta ' + game.limit + ' ▾';
+
+    const maxScore = Math.max(game.scores[0], game.scores[1]);
+
     document.querySelectorAll('.limit-pick-btn').forEach(function (b) {
-        b.classList.toggle('active', +b.dataset.val === game.limit);
+        const val      = +b.dataset.val;
+        const exceeded = maxScore >= val;
+        b.classList.toggle('active',    val === game.limit);
+        b.classList.toggle('disabled',  exceeded);
+        b.disabled = exceeded;
     });
 }
