@@ -128,10 +128,13 @@ input {
 .tipo-toggle {
     display: flex;
     gap: 6px;
+    width: 100%;
 }
 .tipo-toggle input[type="radio"] { display: none; }
 .tipo-toggle label {
-    padding: 6px 20px;
+    flex: 1;
+    text-align: center;
+    padding: 6px 0;
     border: 1px solid var(--border);
     border-radius: 5px;
     cursor: pointer;
