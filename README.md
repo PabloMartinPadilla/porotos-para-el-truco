@@ -2,28 +2,33 @@
 
 Tanteador de Truco con estética campera uruguaya. Llevá el puntaje con porotos visuales, modo competitivo con reglas acordadas e historial persistente en el navegador.
 
+**Demo:** [pablomartinpadilla.github.io/porotos-para-el-truco](https://pablomartinpadilla.github.io/porotos-para-el-truco/)
+
 ---
 
 ## Características
 
 - **Porotos visuales** — grupos de 5 formando un montón natural, porotos dorados para el vale cuatro
 - **Malas y buenas** — divisor automático cuando el equipo supera la mitad del límite
+- **+1 / -1 / IV** — sumá, restá o aplicá un vale cuatro por equipo
 - **Vale cuatro** — modal de confirmación antes de sumar los 4 puntos
+- **Revancha** — reinicia con los mismos equipos y reglas sin volver al inicio; se registra en el historial con badge dorado
 - **Modo competitivo** — acordá reglas predefinidas o custom antes de empezar; las reglas custom se persisten entre sesiones
-- **Cambio de límite en partida** — modificá el tope de puntos durante el juego
-- **Solo / dupla** — el texto de los modales refleja si el equipo es individual o de dos
-- **Historial** — todas las partidas guardadas en `localStorage` con fecha, score final y si alguien durmió afuera
+- **Solo / dupla** — toggle global que cambia los placeholders de nombre ("Yo"/"Vos" o "Nosotros"/"Ellos")
+- **Cambio de límite en partida** — las opciones ya superadas aparecen bloqueadas; los porotos se reorganizan al cambiar
+- **Historial** — todas las partidas en `localStorage` con fecha, score y si alguien durmió afuera
+- **PWA** — instalable en Android con banner de instalación; funciona offline
 
 ---
 
 ## Stack
 
-| Capa        | Tecnología                                |
-|-------------|-------------------------------------------|
-| UI          | HTML + CSS + JavaScript (ES Modules)      |
-| Build       | [Vite 4](https://v4.vitejs.dev/)          |
-| PWA         | [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) + Workbox |
-| Persistencia| `localStorage` (sin backend)              |
+| Capa         | Tecnología                                                      |
+|--------------|-----------------------------------------------------------------|
+| UI           | HTML + CSS + JavaScript (ES Modules)                            |
+| Build        | [Vite 4](https://v4.vitejs.dev/)                                |
+| PWA          | [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) + Workbox  |
+| Persistencia | `localStorage` (sin backend)                                    |
 
 Sin frameworks ni librerías de runtime.
 
@@ -48,14 +53,14 @@ npm run preview
 npm run icons
 ```
 
+---
+
 ## Instalar como app (PWA)
 
-La app es una Progressive Web App — se puede instalar en el celular sin pasar por ninguna tienda:
+La app es una Progressive Web App instalable en Android directamente desde el navegador — sin tienda, sin APK.
 
-- **Android (Chrome):** abrí el link de GitHub Pages → menú ⋮ → *"Agregar a pantalla de inicio"*
-- **iPhone (Safari):** abrí el link → botón compartir → *"Agregar a pantalla de inicio"*
-
-Una vez instalada funciona offline y se abre como app nativa.
+- **Android (Chrome):** aparece un banner "Instalá la app en tu celular" en la pantalla de inicio
+- Una vez instalada funciona offline y se abre como app nativa
 
 ---
 
@@ -63,12 +68,11 @@ Una vez instalada funciona offline y se abre como app nativa.
 
 El repositorio incluye un workflow de GitHub Actions que buildea y publica automáticamente en cada push a `main`.
 
-**Pasos para activarlo (una sola vez):**
+**Activarlo (una sola vez):**
 
-1. Subir el repo a GitHub
-2. Ir a **Settings → Pages**
-3. En *Source* seleccionar **GitHub Actions**
-4. Hacer push — el workflow corre solo y publica en:
+1. Ir a **Settings → Pages** en el repo
+2. En *Source* seleccionar **GitHub Actions**
+3. Hacer push — el workflow corre solo y publica en:
    `https://<usuario>.github.io/<nombre-del-repo>/`
 
 ---
@@ -83,23 +87,24 @@ TanteadorTruco/
 │   └── icons/
 │       ├── icon-192.png          # Ícono PWA 192×192
 │       ├── icon-512.png          # Ícono PWA 512×512
-│       └── apple-touch-icon.png  # Ícono para iOS 180×180
+│       └── apple-touch-icon.png  # Ícono iOS 180×180
 │
 ├── scripts/
-│   └── generate-icons.js   # Genera los PNGs desde icon.svg (node scripts/generate-icons.js)
+│   └── generate-icons.js         # Genera los PNGs desde icon.svg con sharp
 │
 ├── src/
-│   ├── main.js             # Punto de entrada — inicializa listeners y navegación
-│   ├── style.css           # Estilos globales
-│   ├── game.js             # Clase Game: lógica pura de la partida
-│   ├── storage.js          # Historial: leer/escribir en localStorage
-│   ├── ui.js               # Renderizado: porotos, pantallas, historial
-│   ├── rules.js            # Modo competitivo: reglas predefinidas y custom
-│   └── constants.js        # Claves de localStorage y labels de reglas
+│   ├── main.js                   # Controlador principal — listeners y navegación
+│   ├── style.css                 # Estilos globales
+│   ├── game.js                   # Clase Game: lógica pura de la partida
+│   ├── storage.js                # Historial en localStorage
+│   ├── ui.js                     # Renderizado: porotos, pantallas, historial
+│   ├── rules.js                  # Modo competitivo: reglas predefinidas y custom
+│   └── constants.js              # Claves de localStorage y labels
 │
-├── index.html              # Entry point de Vite
-├── vite.config.js          # Configuración de Vite + PWA
-├── .editorconfig           # Consistencia de formato entre editores
+├── index.html                    # Entry point de Vite
+├── vite.config.js                # Configuración de Vite + PWA
+├── .github/workflows/deploy.yml  # CI/CD → GitHub Pages
+├── .editorconfig
 ├── .gitignore
 └── package.json
 ```
@@ -114,19 +119,20 @@ Clase con toda la lógica de la partida. No toca el DOM.
 
 | Método | Descripción |
 |--------|-------------|
-| `addPoint(teamIndex)` | Suma 1 punto al equipo; retorna el índice del ganador o `null` |
-| `addVale(callerIndex)` | Suma 4 puntos (marcados como vale); retorna ganador o `null` |
-| `getWinner()` | `null` si la partida sigue, índice del ganador si alguno llegó al límite |
-| `isVale(teamIndex, idx)` | `true` si ese poroto es producto de un vale cuatro |
+| `addPoint(teamIndex)` | Suma 1 punto; retorna índice del ganador o `null` |
+| `removePoint(teamIndex)` | Resta 1 punto (mín 0); limpia el registro de vale si aplica |
+| `addVale(callerIndex)` | Suma 4 puntos dorados; retorna ganador o `null` |
+| `getWinner()` | `null` si la partida sigue, índice del ganador si llegó al límite |
+| `isVale(teamIndex, idx)` | `true` si ese poroto es de un vale cuatro |
 | `loserDurmioAfuera(winnerIndex)` | `true` si el perdedor no llegó a la mitad del límite |
-| `toRecord(winnerIndex)` | Objeto serializable para guardar en el historial |
+| `toRecord(winnerIndex)` | Objeto serializable para el historial (incluye `isRevancha`) |
 
 ### `src/storage.js`
 
 | Función | Descripción |
 |---------|-------------|
-| `saveRecord(record)` | Inserta un registro al inicio del historial en `localStorage` |
-| `getAllRecords()` | Devuelve el historial completo o `[]` si no hay nada |
+| `saveRecord(record)` | Inserta un registro al inicio del historial |
+| `getAllRecords()` | Devuelve el historial completo o `[]` |
 
 ### `src/ui.js`
 
@@ -134,56 +140,54 @@ Clase con toda la lógica de la partida. No toca el DOM.
 |---------|-------------|
 | `showScreen(id)` | Muestra la pantalla indicada y oculta las demás |
 | `renderPorotos(game, teamIndex)` | Re-dibuja todos los porotos de un equipo |
-| `renderGrupos(game, container, teamIndex, fromIdx, count)` | Renderiza grupos de 5 (montón) o fila suelta |
-| `animateLastPoroto(teamIndex)` | Dispara la animación `popIn` en el último poroto |
-| `renderHistorialItem(record)` | Genera el HTML string de un ítem del historial |
-| `updateLimitDisplay(game)` | Actualiza el botón del límite y marca el activo en el picker |
+| `renderGrupos(...)` | Renderiza grupos de 5 (montón) o fila suelta |
+| `animateLastPoroto(teamIndex)` | Animación `popIn` en el último poroto |
+| `renderHistorialItem(record)` | HTML de un ítem del historial (con badge revancha si aplica) |
+| `updateLimitDisplay(game)` | Actualiza el picker de límite y bloquea opciones ya superadas |
 
 ### `src/rules.js`
 
 | Función | Descripción |
 |---------|-------------|
-| `saveCustomRules()` | Persiste las reglas dinámicas del DOM en `localStorage` |
-| `loadCustomRules()` | Devuelve las reglas custom guardadas |
-| `renderCustomRulesSaved()` | Recarga las reglas custom en el modal desde `localStorage` |
-| `agregarReglaDinamica(nombre, desc)` | Crea y agrega una regla custom al modal |
+| `saveCustomRules()` | Persiste reglas dinámicas en `localStorage` |
+| `loadCustomRules()` | Devuelve reglas custom guardadas |
+| `renderCustomRulesSaved()` | Recarga reglas custom en el modal |
+| `agregarReglaDinamica(nombre, desc)` | Agrega una regla custom al modal |
 | `cerrarFormRegla()` | Cierra y limpia el formulario de nueva regla |
 | `collectReglas()` | Lee el modal y retorna el objeto de reglas acordadas |
-| `showReglasPanel(game)` | Abre el modal en modo solo lectura con las reglas de la partida activa |
+| `showReglasPanel(game)` | Abre el modal en modo solo lectura |
 
 ### `src/constants.js`
 
 | Constante | Descripción |
 |-----------|-------------|
 | `STORAGE_KEY` | Clave de `localStorage` para el historial (`truco_historial`) |
-| `REGLAS_CUSTOM_KEY` | Clave de `localStorage` para reglas custom (`truco_reglas_custom`) |
+| `REGLAS_CUSTOM_KEY` | Clave para reglas custom (`truco_reglas_custom`) |
 | `REGLAS_LABELS` | Labels legibles de las tres reglas predefinidas |
 
 ---
 
 ## Paleta de colores
 
-| Variable CSS | Valor | Uso |
-|---|---|---|
-| `--bg` | `#130e05` | Fondo de la app |
-| `--surface` | `#1e1609` | Cards y fields |
-| `--surface-raised` | `#2a1e0d` | Elementos elevados |
-| `--accent` | `#8b2500` | Botón primario, rojo truco |
-| `--gold` | `#d4a017` | Porotos vale cuatro |
-| `--poroto` | `#7a4e30` | Color base del poroto |
-| `--text` | `#e8d5b0` | Texto principal |
-| `--text-muted` | `#8a6d48` | Texto secundario |
+| Variable CSS      | Valor     | Uso                        |
+|-------------------|-----------|----------------------------|
+| `--bg`            | `#130e05` | Fondo de la app            |
+| `--surface`       | `#1e1609` | Cards y fields             |
+| `--surface-raised`| `#2a1e0d` | Elementos elevados         |
+| `--accent`        | `#8b2500` | Botón primario, rojo truco |
+| `--gold`          | `#d4a017` | Vale cuatro y revancha     |
+| `--poroto`        | `#7a4e30` | Color base del poroto      |
+| `--text`          | `#e8d5b0` | Texto principal            |
+| `--text-muted`    | `#8a6d48` | Texto secundario           |
 
 ---
 
 ## localStorage
 
-La app no requiere backend. Todos los datos se guardan en el navegador:
-
 | Clave | Contenido |
 |-------|-----------|
-| `truco_historial` | Array de objetos `GameRecord` (fecha, equipos, scores, límite, durmioAfuera, reglas) |
-| `truco_reglas_custom` | Array de reglas personalizadas `{ nombre, desc }` |
+| `truco_historial` | Array de `GameRecord` (fecha, equipos, scores, límite, durmioAfuera, reglas, isRevancha) |
+| `truco_reglas_custom` | Array de reglas custom `{ nombre, desc }` |
 
 Para limpiar todos los datos: `localStorage.clear()` en la consola del navegador.
 
