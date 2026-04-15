@@ -8,6 +8,8 @@ import {
     renderHistorialItem,
     renderHistorialSerie,
     renderHistorialStats,
+    buildEstadisticasData,
+    renderMatchupCard,
     updateLimitDisplay,
 } from './ui.js';
 import {
@@ -32,6 +34,9 @@ import {
 // ── Estado global de la partida ──────────────────────────────
 /** @type {Game|null} */
 let game = null;
+
+/** @type {object[]} Cache de datos de estadísticas por enfrentamiento */
+let estadisticasData = [];
 
 /** @type {{ callerIndex: number }|null} */
 let pendingVale = null;
@@ -276,6 +281,40 @@ function updatePlaceholders() {
     });
 }
 
+/**
+ * Carga y muestra la pantalla de estadísticas por enfrentamiento.
+ */
+function showEstadisticas() {
+    estadisticasData = buildEstadisticasData(getAllRecords());
+    document.getElementById('estadisticas-buscar').value = '';
+    renderEstadisticasLista('');
+    showScreen('screen-estadisticas');
+}
+
+/**
+ * Renderiza (o filtra) la lista de tarjetas de enfrentamiento.
+ * @param {string} query - Texto de búsqueda (vacío = mostrar todo).
+ */
+function renderEstadisticasLista(query) {
+    const lista = document.getElementById('estadisticas-lista');
+    const q = query.trim().toLowerCase();
+    const filtered = q
+        ? estadisticasData.filter(function (m) {
+            return m.teamNames.some(function (n) { return n.toLowerCase().includes(q); });
+          })
+        : estadisticasData;
+
+    if (estadisticasData.length === 0) {
+        lista.innerHTML = '<p class="empty-msg">Todavía no hay partidas con nombres personalizados.</p>';
+        return;
+    }
+    if (filtered.length === 0) {
+        lista.innerHTML = '<p class="empty-msg">No se encontraron resultados.</p>';
+        return;
+    }
+    lista.innerHTML = filtered.map(renderMatchupCard).join('');
+}
+
 // ── Helpers ───────────────────────────────────────────────────
 function newSerieId() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
@@ -507,8 +546,22 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    document.getElementById('btn-ir-estadisticas').addEventListener('click', function () {
+        playTap();
+        showEstadisticas();
+    });
+
+    document.getElementById('btn-estadisticas-volver').addEventListener('click', function () {
+        playTap();
+        showHistorial();
+    });
+
+    document.getElementById('estadisticas-buscar').addEventListener('input', function () {
+        renderEstadisticasLista(this.value);
+    });
+
     // Botones "volver al inicio" desde cualquier pantalla
-    ['btn-inicio-desde-juego', 'btn-inicio-desde-resultado', 'btn-inicio-desde-historial'].forEach(function (id) {
+    ['btn-inicio-desde-juego', 'btn-inicio-desde-resultado', 'btn-inicio-desde-historial', 'btn-inicio-desde-estadisticas'].forEach(function (id) {
         document.getElementById(id).addEventListener('click', function () {
             playTap();
             game = null;

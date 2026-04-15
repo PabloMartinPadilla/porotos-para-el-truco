@@ -213,6 +213,136 @@ export function renderHistorialSerie(serieRecords, indices) {
 }
 
 /**
+ * Procesa todos los registros y devuelve datos de estadísticas por enfrentamiento.
+ * Excluye partidas donde CUALQUIER equipo tiene nombre predeterminado.
+ * Solo vs dupla se cuentan por separado.
+ * @param {object[]} records - Todos los registros guardados.
+ * @returns {object[]} Array de matchups con stats agregadas.
+ */
+export function buildEstadisticasData(records) {
+    const validos = records.filter(function (r) {
+        return !r.teamNames.some(function (n) { return NOMBRES_DEFAULT.has(n.trim()); });
+    });
+
+    const matchupMap = new Map();
+
+    validos.forEach(function (r) {
+        const names      = r.teamNames.map(function (n) { return n.trim(); });
+        const namesLower = names.map(function (n) { return n.toLowerCase(); });
+        const tipo       = (r.isDupla && r.isDupla[0]) ? 'dupla' : 'solo';
+
+        // Clave canónica: nombres ordenados alfabéticamente + tipo
+        const sortedLower = namesLower.slice().sort();
+        const key = sortedLower[0] + '\x00' + sortedLower[1] + '\x00' + tipo;
+
+        // ¿Están invertidos respecto al orden canónico?
+        const isSwapped = namesLower[0] !== sortedLower[0];
+
+        if (!matchupMap.has(key)) {
+            matchupMap.set(key, {
+                teamNames: isSwapped ? [names[1], names[0]] : [names[0], names[1]],
+                tipo: tipo,
+                games: [],
+            });
+        }
+
+        const m = matchupMap.get(key);
+        m.games.push({
+            date:            r.date,
+            winnerCanonical: isSwapped ? 1 - r.winner : r.winner,
+            scores:          isSwapped ? [r.scores[1], r.scores[0]] : [r.scores[0], r.scores[1]],
+        });
+    });
+
+    const result = [];
+
+    matchupMap.forEach(function (m) {
+        m.games.sort(function (a, b) { return a.date - b.date; }); // más antigua primero
+
+        const wins   = [0, 0];
+        const points = [0, 0];
+        m.games.forEach(function (g) {
+            wins[g.winnerCanonical]++;
+            points[0] += g.scores[0];
+            points[1] += g.scores[1];
+        });
+
+        // Racha actual: victorias consecutivas del mismo equipo desde el final
+        var streak = 0;
+        var streakTeam = -1;
+        for (var i = m.games.length - 1; i >= 0; i--) {
+            if (streakTeam === -1) {
+                streakTeam = m.games[i].winnerCanonical;
+                streak = 1;
+            } else if (m.games[i].winnerCanonical === streakTeam) {
+                streak++;
+            } else {
+                break;
+            }
+        }
+
+        // Para mostrar: el líder (más victorias) siempre primero
+        var teamNames  = m.teamNames;
+        var winsDisp   = wins;
+        var ptsDisp    = points;
+        var streakDisp = streakTeam;
+
+        if (wins[1] > wins[0]) {
+            teamNames  = [m.teamNames[1], m.teamNames[0]];
+            winsDisp   = [wins[1], wins[0]];
+            ptsDisp    = [points[1], points[0]];
+            streakDisp = streakTeam === 0 ? 1 : 0;
+        }
+
+        result.push({
+            teamNames:  teamNames,
+            tipo:       m.tipo,
+            total:      m.games.length,
+            wins:       winsDisp,
+            points:     ptsDisp,
+            streak:     streak,
+            streakTeam: streakDisp,
+            lastDate:   new Date(m.games[m.games.length - 1].date),
+        });
+    });
+
+    // Ordenar: más partidas primero, desempate por más reciente
+    result.sort(function (a, b) {
+        return b.total - a.total || b.lastDate - a.lastDate;
+    });
+
+    return result;
+}
+
+/**
+ * Genera el HTML de una tarjeta de enfrentamiento para la pantalla de estadísticas.
+ * @param {object} m - Matchup procesado por buildEstadisticasData.
+ * @returns {string} HTML string.
+ */
+export function renderMatchupCard(m) {
+    const dateStr  = m.lastDate.toLocaleDateString('es-UY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const rachaHtml = m.streak >= 2
+        ? '<div class="matchup-racha">racha: <strong>' + m.teamNames[m.streakTeam] + '</strong> \xd7' + m.streak + '</div>'
+        : '';
+
+    return '<div class="matchup-card">' +
+        '<div class="matchup-header">' +
+            '<span class="matchup-teams">' + m.teamNames[0] + ' vs ' + m.teamNames[1] + '</span>' +
+            '<span class="matchup-tipo">' + m.tipo + '</span>' +
+        '</div>' +
+        '<div class="matchup-stats">' +
+            '<span class="matchup-score">' + m.wins[0] + '\u2013' + m.wins[1] + '</span>' +
+            '<span class="matchup-stat-label">partidas</span>' +
+            '<span class="matchup-sep">\xb7</span>' +
+            '<span class="matchup-score">' + m.points[0] + '\u2013' + m.points[1] + '</span>' +
+            '<span class="matchup-stat-label">puntos</span>' +
+        '</div>' +
+        rachaHtml +
+        '<div class="matchup-last">última: ' + dateStr + '</div>' +
+    '</div>';
+}
+
+/**
  * Actualiza el botón que muestra el límite actual y marca el botón activo en el picker.
  * @param {import('./game.js').Game} game - Instancia de la partida actual.
  */
