@@ -788,6 +788,22 @@ input {
 .btn-vale:hover  { background: rgba(212,160,23,0.08); border-color: var(--gold-dark); }
 .btn-vale:active { transform: scale(0.97); }
 
+.btn-restar {
+    width: 100%;
+    padding: 7px 0;
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-family: inherit;
+    transition: color 0.15s, border-color 0.15s;
+}
+.btn-restar:hover  { color: var(--text-muted); border-color: var(--border-light); }
+.btn-restar:active { transform: scale(0.97); }
+
 /* ── Modal: Vale cuatro ────────────────────────────────────── */
 .modal {
     position: fixed;

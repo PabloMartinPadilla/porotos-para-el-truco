@@ -31,6 +31,17 @@ export class Game {
     }
 
     /**
+     * Resta un punto al equipo indicado. Mínimo 0.
+     * Si el poroto que se elimina era de un vale, lo quita del registro.
+     * @param {number} teamIndex
+     */
+    removePoint(teamIndex) {
+        if (this.scores[teamIndex] <= 0) return;
+        this.scores[teamIndex]--;
+        this.valeIndices[teamIndex].delete(this.scores[teamIndex]);
+    }
+
+    /**
      * Aplica un vale cuatro al equipo indicado (suma 4 puntos, marca los índices como vale).
      * @param {number} callerIndex - Índice del equipo que cantó el vale.
      * @returns {number|null} Índice del ganador, o null si la partida continúa.

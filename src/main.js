@@ -219,6 +219,15 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () { handleVale(+btn.dataset.team); });
     });
 
+    document.querySelectorAll('.btn-restar').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const teamIndex = +btn.dataset.team;
+            game.removePoint(teamIndex);
+            renderPorotos(game, teamIndex);
+            updateLimitDisplay(game);
+        });
+    });
+
     document.getElementById('btn-ir-historial').addEventListener('click', showHistorial);
     document.getElementById('btn-ir-historial-juego').addEventListener('click', showHistorial);
 
