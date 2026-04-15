@@ -47,8 +47,8 @@ function startGame() {
 function launchGame(reglas) {
     const name0   = document.getElementById('input-team0').value.trim() || 'Nosotros';
     const name1   = document.getElementById('input-team1').value.trim() || 'Ellos';
-    const tipo0   = getTipo(0);
-    const tipo1   = getTipo(1);
+    const tipo0   = getTipo();
+    const tipo1   = getTipo();
     const limitEl = document.querySelector('input[name="limit"]:checked');
     const limit   = limitEl ? +limitEl.value : 30;
 
@@ -173,28 +173,24 @@ const PLACEHOLDERS = {
     1: { solo: 'Vos',      dupla: 'Ellos'    },
 };
 
-function getTipo(teamIndex) {
-    return document.getElementById('tipo' + teamIndex + '-btn').dataset.value;
+function getTipo() {
+    return document.querySelector('input[name="tipo"]:checked').value;
 }
 
-function updatePlaceholder(teamIndex) {
-    const input = document.getElementById('input-team' + teamIndex);
-    input.placeholder = PLACEHOLDERS[teamIndex][getTipo(teamIndex)];
+function updatePlaceholders() {
+    const tipo = getTipo();
+    [0, 1].forEach(function (i) {
+        document.getElementById('input-team' + i).placeholder = PLACEHOLDERS[i][tipo];
+    });
 }
 
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
-    // Toggle solo/dupla
-    [0, 1].forEach(function (i) {
-        var btn = document.getElementById('tipo' + i + '-btn');
-        btn.addEventListener('click', function () {
-            var next = btn.dataset.value === 'solo' ? 'dupla' : 'solo';
-            btn.dataset.value = next;
-            btn.textContent   = next;
-            updatePlaceholder(i);
-        });
-        updatePlaceholder(i);
+    // Toggle solo/dupla global
+    document.querySelectorAll('input[name="tipo"]').forEach(function (radio) {
+        radio.addEventListener('change', updatePlaceholders);
     });
+    updatePlaceholders();
 
     document.getElementById('btn-empezar').addEventListener('click', startGame);
 
