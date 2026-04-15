@@ -34,46 +34,12 @@ Sin frameworks ni librerías de runtime.
 
 ---
 
-## Inicio rápido
-
-```bash
-# 1. Instalar dependencias
-npm install
-
-# 2. Servidor de desarrollo → http://localhost:5173
-npm run dev
-
-# 3. Build de producción → dist/
-npm run build
-
-# 4. Previsualizar el build localmente
-npm run preview
-
-# (Opcional) Regenerar íconos PNG desde public/icon.svg
-npm run icons
-```
-
----
-
 ## Instalar como app (PWA)
 
 La app es una Progressive Web App instalable en Android directamente desde el navegador — sin tienda, sin APK.
 
 - **Android (Chrome):** aparece un banner "Instalá la app en tu celular" en la pantalla de inicio
 - Una vez instalada funciona offline y se abre como app nativa
-
----
-
-## Deploy en GitHub Pages
-
-El repositorio incluye un workflow de GitHub Actions que buildea y publica automáticamente en cada push a `main`.
-
-**Activarlo (una sola vez):**
-
-1. Ir a **Settings → Pages** en el repo
-2. En *Source* seleccionar **GitHub Actions**
-3. Hacer push — el workflow corre solo y publica en:
-   `https://<usuario>.github.io/<nombre-del-repo>/`
 
 ---
 
