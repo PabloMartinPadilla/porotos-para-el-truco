@@ -44,6 +44,18 @@ npm run build
 npm run preview
 ```
 
+## Deploy en GitHub Pages
+
+El repositorio incluye un workflow de GitHub Actions que buildea y publica automáticamente en cada push a `main`.
+
+**Pasos para activarlo (una sola vez):**
+
+1. Subir el repo a GitHub
+2. Ir a **Settings → Pages**
+3. En *Source* seleccionar **GitHub Actions**
+4. Hacer push — el workflow corre solo y publica en:
+   `https://<usuario>.github.io/<nombre-del-repo>/`
+
 ---
 
 ## Estructura del proyecto
