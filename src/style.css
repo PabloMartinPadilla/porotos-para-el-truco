@@ -1031,9 +1031,10 @@ input {
 #screen-historial { padding: 0; }
 
 .historial-header {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: space-between;
     padding: 14px 18px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
@@ -1050,6 +1051,9 @@ input {
 .btn-volver:hover { color: var(--text); }
 
 .historial-header h2 {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
     font-size: 0.85rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
