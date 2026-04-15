@@ -1071,8 +1071,11 @@ input {
 
 /* ── Banner de instalación PWA ─────────────────────────────── */
 .pwa-banner {
-    position: relative;
-    width: 100%;
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    z-index: 200;
     background: var(--surface-raised);
     border: 1px solid var(--border-light);
     border-radius: 10px;
@@ -1080,6 +1083,7 @@ input {
     display: flex;
     align-items: center;
     gap: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
 }
 
 .pwa-banner.hidden { display: none; }
