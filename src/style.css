@@ -988,6 +988,40 @@ input {
     text-align: center;
 }
 
+.resultado-revancha-badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid rgba(212,160,23,0.5);
+    border-radius: 4px;
+    padding: 3px 10px;
+}
+.resultado-revancha-badge.hidden { display: none; }
+
+.resultado-serie {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+}
+.resultado-serie.hidden { display: none; }
+
+.resultado-serie-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+}
+
+#resultado-serie-score {
+    font-weight: 700;
+    color: var(--text);
+}
+
 .resultado-label {
     font-size: 0.72rem;
     letter-spacing: 0.18em;
@@ -1228,6 +1262,87 @@ input {
     transition: all 0.15s;
 }
 .btn-hist-revancha:hover { background: rgba(212,160,23,0.12); border-color: var(--gold); }
+
+/* ── Historial: bloque de serie ────────────────────────────── */
+.historial-serie {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.historial-serie-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 8px;
+    padding: 10px 16px 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.historial-serie-teams {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text);
+}
+
+.historial-serie-tally {
+    font-size: 0.78rem;
+    color: var(--gold);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
+}
+
+.historial-serie-games {
+    display: flex;
+    flex-direction: column;
+}
+
+.historial-serie-game {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.78rem;
+}
+
+.historial-serie-game:last-child { border-bottom: none; }
+
+.historial-serie-game-num {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    min-width: 14px;
+}
+
+.historial-serie-game-date {
+    color: var(--text-dim);
+    font-size: 0.68rem;
+    flex: 1;
+}
+
+.historial-serie-game-score {
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.02em;
+}
+
+.historial-serie-game-winner {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-align: right;
+    min-width: 56px;
+}
+
+.historial-serie-footer {
+    padding: 8px 16px;
+    display: flex;
+    justify-content: flex-end;
+    border-top: 1px solid var(--border);
+}
 
 /* ── Scrollbar ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }

@@ -131,6 +131,48 @@ export function renderHistorialItem(r, idx) {
 }
 
 /**
+ * Genera el HTML de un bloque de serie (varias partidas ligadas por serieId).
+ * @param {object[]} serieRecords - Partidas en orden cronológico (más antigua primero).
+ * @param {number[]} indices - Posiciones correspondientes en getAllRecords().
+ * @returns {string}
+ */
+export function renderHistorialSerie(serieRecords, indices) {
+    const teams = serieRecords[0].teamNames;
+    const wins  = [0, 0];
+    serieRecords.forEach(function (r) { wins[r.winner]++; });
+    const tally = teams[0] + ' ' + wins[0] + ' \u2014 ' + wins[1] + ' ' + teams[1];
+
+    // El índice más bajo en el array de records = partida más reciente (data-idx para revancha)
+    const newestIdx = indices[indices.length - 1];
+
+    const gamesHtml = serieRecords.map(function (r, k) {
+        const date     = new Date(r.date);
+        const dateStr  = date.toLocaleDateString('es-UY', { day: '2-digit', month: '2-digit' });
+        const timeStr  = date.toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
+        const wi = r.winner;
+        const li = 1 - wi;
+        const num = r.isRevancha ? 'rev' : 'P' + (k + 1 - serieRecords.slice(0, k).filter(function(x){ return !x.isRevancha; }).length);
+        return '<div class="historial-serie-game">' +
+            '<span class="historial-serie-game-num">' + (k + 1) + '</span>' +
+            '<span class="historial-serie-game-date">' + dateStr + ' ' + timeStr + '</span>' +
+            '<span class="historial-serie-game-score">' + r.scores[wi] + ' \u2013 ' + r.scores[li] + '</span>' +
+            '<span class="historial-serie-game-winner">' + r.teamNames[wi] + '</span>' +
+        '</div>';
+    }).join('');
+
+    return '<div class="historial-serie">' +
+        '<div class="historial-serie-header">' +
+            '<span class="historial-serie-teams">' + teams[0] + ' vs ' + teams[1] + '</span>' +
+            '<span class="historial-serie-tally">' + tally + '</span>' +
+        '</div>' +
+        '<div class="historial-serie-games">' + gamesHtml + '</div>' +
+        '<div class="historial-serie-footer">' +
+            '<button class="btn-hist-revancha" data-idx="' + newestIdx + '">Revancha</button>' +
+        '</div>' +
+    '</div>';
+}
+
+/**
  * Actualiza el botón que muestra el límite actual y marca el botón activo en el picker.
  * @param {import('./game.js').Game} game - Instancia de la partida actual.
  */

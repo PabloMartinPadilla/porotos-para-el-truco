@@ -6,6 +6,7 @@ import {
     renderPorotos,
     animateLastPoroto,
     renderHistorialItem,
+    renderHistorialSerie,
     updateLimitDisplay,
 } from './ui.js';
 import {
@@ -67,6 +68,7 @@ function launchGame(reglas) {
         isDupla:   [tipo0 === 'dupla', tipo1 === 'dupla'],
         limit,
         reglas,
+        serieId:   newSerieId(),
     });
 
     document.querySelectorAll('.team-name').forEach((el, i) => {
@@ -164,6 +166,27 @@ function endGame(winnerIndex) {
         durmioEl.classList.add('hidden');
     }
 
+    // Badge revancha
+    document.getElementById('resultado-revancha-badge')
+        .classList.toggle('hidden', !game.isRevancha);
+
+    // Score de serie
+    const serieEl = document.getElementById('resultado-serie');
+    if (game.serieId) {
+        const serieRecords = getAllRecords().filter(function (r) { return r.serieId === game.serieId; });
+        if (serieRecords.length > 1) {
+            const wins = [0, 0];
+            serieRecords.forEach(function (r) { wins[r.winner]++; });
+            document.getElementById('resultado-serie-score').textContent =
+                game.teamNames[0] + ' ' + wins[0] + ' \u2014 ' + wins[1] + ' ' + game.teamNames[1];
+            serieEl.classList.remove('hidden');
+        } else {
+            serieEl.classList.add('hidden');
+        }
+    } else {
+        serieEl.classList.add('hidden');
+    }
+
     showScreen('screen-resultado');
 }
 
@@ -176,9 +199,42 @@ function showHistorial() {
 
     if (records.length === 0) {
         lista.innerHTML = '<p class="empty-msg">Todavía no hay partidas guardadas.</p>';
-    } else {
-        lista.innerHTML = records.map(function (r, i) { return renderHistorialItem(r, i); }).join('');
+        showScreen('screen-historial');
+        return;
     }
+
+    // Agrupar por serieId; records sin serieId van solos
+    const groups = [];
+    const seen   = new Set();
+
+    records.forEach(function (r, i) {
+        if (seen.has(i)) return;
+        if (!r.serieId) {
+            groups.push({ records: [r], indices: [i] });
+            seen.add(i);
+            return;
+        }
+        const group = { records: [], indices: [] };
+        records.forEach(function (r2, j) {
+            if (r2.serieId === r.serieId) {
+                group.records.push(r2);
+                group.indices.push(j);
+                seen.add(j);
+            }
+        });
+        // Ordenar cronológicamente (índice más alto = más antigua en el array newest-first)
+        const pairs = group.indices.map(function (idx, k) { return { r: group.records[k], idx: idx }; });
+        pairs.sort(function (a, b) { return b.idx - a.idx; });
+        group.records = pairs.map(function (p) { return p.r; });
+        group.indices = pairs.map(function (p) { return p.idx; });
+        groups.push(group);
+    });
+
+    lista.innerHTML = groups.map(function (g) {
+        return g.records.length === 1
+            ? renderHistorialItem(g.records[0], g.indices[0])
+            : renderHistorialSerie(g.records, g.indices);
+    }).join('');
 
     showScreen('screen-historial');
 }
@@ -186,10 +242,11 @@ function showHistorial() {
 function launchRevanchaDesdeHistorial(record) {
     game = new Game({
         teamNames:  record.teamNames,
-        isDupla:    [false, false],
+        isDupla:    record.isDupla   || [false, false],
         limit:      record.limit,
-        reglas:     record.reglas || null,
+        reglas:     record.reglas    || null,
         isRevancha: true,
+        serieId:    record.serieId   || newSerieId(),
     });
 
     document.querySelectorAll('.team-name').forEach(function (el, i) {
@@ -218,6 +275,11 @@ function updatePlaceholders() {
     [0, 1].forEach(function (i) {
         document.getElementById('input-team' + i).placeholder = PLACEHOLDERS[i][tipo];
     });
+}
+
+// ── Helpers ───────────────────────────────────────────────────
+function newSerieId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
 }
 
 // ── Tema ──────────────────────────────────────────────────────
@@ -400,6 +462,7 @@ document.addEventListener('DOMContentLoaded', function () {
             limit:      game.limit,
             reglas:     game.reglas,
             isRevancha: true,
+            serieId:    game.serieId,
         });
 
         document.querySelectorAll('.team-name').forEach(function (el, i) {
