@@ -1154,6 +1154,7 @@ input {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    flex-shrink: 0;
 }
 
 .historial-meta {
@@ -1311,6 +1312,7 @@ input {
 .historial-serie {
     background: var(--surface);
     border: 1px solid var(--border);
+    flex-shrink: 0;
     border-radius: 8px;
     overflow: hidden;
     display: flex;
