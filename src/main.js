@@ -168,8 +168,27 @@ function showHistorial() {
     showScreen('screen-historial');
 }
 
+const PLACEHOLDERS = {
+    0: { solo: 'Yo',       dupla: 'Nosotros' },
+    1: { solo: 'Vos',      dupla: 'Ellos'    },
+};
+
+function updatePlaceholder(teamIndex) {
+    const tipo  = document.querySelector('input[name="tipo' + teamIndex + '"]:checked').value;
+    const input = document.getElementById('input-team' + teamIndex);
+    input.placeholder = PLACEHOLDERS[teamIndex][tipo];
+}
+
 // ── Init ──────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', function () {
+    // Actualizar placeholders al cambiar solo/dupla
+    [0, 1].forEach(function (i) {
+        document.querySelectorAll('input[name="tipo' + i + '"]').forEach(function (radio) {
+            radio.addEventListener('change', function () { updatePlaceholder(i); });
+        });
+        updatePlaceholder(i);
+    });
+
     document.getElementById('btn-empezar').addEventListener('click', startGame);
 
     document.getElementById('btn-confirmar-reglas').addEventListener('click', function () {
