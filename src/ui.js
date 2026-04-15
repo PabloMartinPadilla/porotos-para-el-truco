@@ -100,9 +100,10 @@ export function animateLastPoroto(teamIndex) {
 /**
  * Genera el HTML de un ítem del historial de partidas.
  * @param {object} r - Registro de partida.
+ * @param {number} idx - Índice en el array de registros (para la revancha).
  * @returns {string} HTML string del ítem.
  */
-export function renderHistorialItem(r) {
+export function renderHistorialItem(r, idx) {
     const date    = new Date(r.date);
     const dateStr = date.toLocaleDateString('es-UY', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const timeStr = date.toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
@@ -125,6 +126,7 @@ export function renderHistorialItem(r) {
             '<span class="historial-loser-name">' + r.teamNames[li] + '</span>' +
         '</div>' +
         (r.durmioAfuera ? '<div class="historial-durmio">' + r.teamNames[li] + ' durmio afuera</div>' : '') +
+        '<button class="btn-hist-revancha" data-idx="' + idx + '">Revancha</button>' +
     '</div>';
 }
 

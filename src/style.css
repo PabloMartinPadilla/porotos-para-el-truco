@@ -50,7 +50,7 @@
 /* Overrides para valores hardcodeados que no usan variables */
 [data-theme="light"] .btn-punto:hover        { background: #cfc09a; }
 [data-theme="light"] .modal                  { background: rgba(80, 55, 25, 0.72); }
-[data-theme="light"] .btn-revancha           { color: #1e0e04; }
+[data-theme="light"] .btn-revancha           { color: #f5ead8; }
 [data-theme="light"] .pwa-banner             { box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
 [data-theme="light"] .check-label input:checked + .check-box::after { border-color: #f0e4ca; }
 
@@ -1211,6 +1211,23 @@ input {
     text-align: center;
     margin-top: 40px;
 }
+
+.btn-hist-revancha {
+    align-self: flex-end;
+    padding: 5px 12px;
+    background: none;
+    border: 1px solid var(--gold-dark);
+    border-radius: 5px;
+    color: var(--gold);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.btn-hist-revancha:hover { background: rgba(212,160,23,0.12); border-color: var(--gold); }
 
 /* ── Scrollbar ─────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 4px; }

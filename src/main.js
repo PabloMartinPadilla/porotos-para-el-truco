@@ -177,10 +177,31 @@ function showHistorial() {
     if (records.length === 0) {
         lista.innerHTML = '<p class="empty-msg">Todavía no hay partidas guardadas.</p>';
     } else {
-        lista.innerHTML = records.map(renderHistorialItem).join('');
+        lista.innerHTML = records.map(function (r, i) { return renderHistorialItem(r, i); }).join('');
     }
 
     showScreen('screen-historial');
+}
+
+function launchRevanchaDesdeHistorial(record) {
+    game = new Game({
+        teamNames:  record.teamNames,
+        isDupla:    [false, false],
+        limit:      record.limit,
+        reglas:     record.reglas || null,
+        isRevancha: true,
+    });
+
+    document.querySelectorAll('.team-name').forEach(function (el, i) {
+        el.textContent = game.teamNames[i];
+    });
+    updateLimitDisplay(game);
+    renderPorotos(game, 0);
+    renderPorotos(game, 1);
+
+    document.getElementById('reglas-badge').classList.toggle('hidden', !game.reglas);
+
+    showScreen('screen-juego');
 }
 
 const PLACEHOLDERS = {
@@ -403,6 +424,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-resultado-historial').addEventListener('click', function () {
         playTap();
         showHistorial();
+    });
+
+    document.getElementById('historial-lista').addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-hist-revancha');
+        if (!btn) return;
+        const records = getAllRecords();
+        const record  = records[+btn.dataset.idx];
+        if (!record) return;
+        playTap();
+        launchRevanchaDesdeHistorial(record);
     });
 
     document.getElementById('btn-historial-volver').addEventListener('click', function () {
