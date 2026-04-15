@@ -232,6 +232,8 @@ document.addEventListener('DOMContentLoaded', function () {
             game.limit = +btn.dataset.val;
             updateLimitDisplay(game);
             document.getElementById('limit-picker').classList.add('hidden');
+            renderPorotos(game, 0);
+            renderPorotos(game, 1);
             const winner = game.getWinner();
             if (winner !== null) endGame(winner);
         });
