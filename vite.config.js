@@ -1,5 +1,7 @@
 import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { readFileSync } from 'fs';
+const { version } = JSON.parse(readFileSync('./package.json', 'utf8'));
 
 export default defineConfig({
     // En GitHub Pages el sitio vive en /<repo-name>/, no en /.
@@ -45,6 +47,10 @@ export default defineConfig({
             },
         }),
     ],
+
+    define: {
+        __APP_VERSION__: JSON.stringify(version),
+    },
 
     build: {
         outDir: 'dist',

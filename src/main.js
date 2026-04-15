@@ -166,10 +166,6 @@ function endGame(winnerIndex) {
         durmioEl.classList.add('hidden');
     }
 
-    // Badge revancha
-    document.getElementById('resultado-revancha-badge')
-        .classList.toggle('hidden', !game.isRevancha);
-
     // Score de serie
     const serieEl = document.getElementById('resultado-serie');
     if (game.serieId) {
@@ -516,6 +512,8 @@ document.addEventListener('DOMContentLoaded', function () {
             showScreen('screen-inicio');
         });
     });
+
+    document.getElementById('app-version').textContent = 'v' + __APP_VERSION__;
 
     showScreen('screen-inicio');
 

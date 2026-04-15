@@ -143,6 +143,12 @@ input {
     letter-spacing: 0.05em;
 }
 
+.app-version {
+    font-size: 0.62rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+}
+
 .inicio-form {
     width: 100%;
     max-width: 340px;
@@ -987,17 +993,6 @@ input {
     gap: 24px;
     text-align: center;
 }
-
-.resultado-revancha-badge {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold);
-    border: 1px solid rgba(212,160,23,0.5);
-    border-radius: 4px;
-    padding: 3px 10px;
-}
-.resultado-revancha-badge.hidden { display: none; }
 
 .resultado-serie {
     display: flex;
