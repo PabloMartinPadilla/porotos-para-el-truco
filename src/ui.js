@@ -166,6 +166,7 @@ export function renderHistorialItem(r, idx) {
             '<span class="historial-loser-name">' + r.teamNames[li] + '</span>' +
         '</div>' +
         (r.durmioAfuera ? '<div class="historial-durmio">' + r.teamNames[li] + ' durmió afuera</div>' : '') +
+        (r.reglas && r.reglas.apuesta ? '<div class="historial-apuesta">apuesta: <strong>' + r.reglas.apuesta + '</strong></div>' : '') +
         '<button class="btn-hist-revancha" data-idx="' + idx + '">Revancha</button>' +
     '</div>';
 }
@@ -332,7 +333,7 @@ export function renderMatchupCard(m) {
             '<span class="matchup-stat-label">partidas</span>' +
             '<span class="matchup-sep">\xb7</span>' +
             '<span class="matchup-score">' + m.points[0] + '\u2013' + m.points[1] + '</span>' +
-            '<span class="matchup-stat-label">puntos</span>' +
+            '<span class="matchup-stat-label">puntos totales</span>' +
         '</div>' +
         pctHtml +
         rachaHtml +

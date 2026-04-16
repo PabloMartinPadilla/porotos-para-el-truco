@@ -30,6 +30,7 @@ export function renderCustomRulesSaved() {
     document.querySelectorAll('.regla-dinamica').forEach(function (el) { el.remove(); });
     reglaIdCounter = 0;
     loadCustomRules().forEach(function (r) { agregarReglaDinamica(r.nombre, r.desc); });
+    document.getElementById('input-apuesta').value = '';
 }
 
 /**
@@ -91,11 +92,13 @@ export function collectReglas() {
             activa: item.querySelector('.regla-check').checked,
         });
     });
+    const apuesta = document.getElementById('input-apuesta').value.trim();
     return {
         contraAchique: document.getElementById('regla-contra-achique').checked,
         perros:        document.getElementById('regla-perros').checked,
         dichoDicho:    document.getElementById('regla-dicho-dicho').checked,
         extras:        customItems.length ? customItems : null,
+        apuesta:       apuesta || null,
     };
 }
 
@@ -110,6 +113,8 @@ export function showReglasPanel(game) {
     document.getElementById('regla-contra-achique').checked = !!r.contraAchique;
     document.getElementById('regla-perros').checked         = !!r.perros;
     document.getElementById('regla-dicho-dicho').checked    = !!r.dichoDicho;
+    document.getElementById('input-apuesta').value          = r.apuesta || '';
+    document.getElementById('input-apuesta').disabled       = true;
 
     // Modo solo lectura: deshabilitar todos los toggles
     modal.querySelectorAll('.regla-check').forEach(function (el) { el.disabled = true; });
@@ -125,6 +130,7 @@ export function showReglasPanel(game) {
         btnConfirmar.textContent = 'Listo, empezar';
         btnConfirmar.onclick = null;
         modal.querySelectorAll('.regla-check').forEach(function (el) { el.disabled = false; });
+        document.getElementById('input-apuesta').disabled = false;
     };
 
     modal.classList.remove('hidden');

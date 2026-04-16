@@ -166,6 +166,10 @@
             <strong id="resultado-durmio-name"></strong> durmió afuera
         </div>
 
+        <div class="resultado-apuesta hidden" id="resultado-apuesta">
+            apuesta: <strong id="resultado-apuesta-texto"></strong>
+        </div>
+
         <div class="resultado-divider"></div>
 
         <div class="resultado-actions">
@@ -271,6 +275,11 @@
                     <button class="btn-regla-add-confirm" id="btn-regla-add-confirm">Agregar</button>
                     <button class="btn-regla-add-cancel" id="btn-regla-add-cancel">Cancelar</button>
                 </div>
+            </div>
+
+            <div class="apuesta-field">
+                <label class="apuesta-label" for="input-apuesta">Apuesta <span class="apuesta-opcional">(opcional)</span></label>
+                <input type="text" id="input-apuesta" class="apuesta-input" placeholder="ej: un café, 100 pesos..." maxlength="40" autocomplete="off">
             </div>
 
             <button class="btn-agregar-regla" id="btn-agregar-regla">+ Agregar regla</button>

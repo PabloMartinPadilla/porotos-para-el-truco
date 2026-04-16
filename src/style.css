@@ -1090,6 +1090,14 @@ input {
 
 .resultado-durmio.hidden { display: none; }
 
+.resultado-apuesta {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+}
+.resultado-apuesta strong { color: var(--gold); }
+.resultado-apuesta.hidden { display: none; }
+
 .resultado-actions {
     display: flex;
     flex-direction: column;
@@ -1251,6 +1259,14 @@ input {
     padding-top: 6px;
     font-style: italic;
 }
+
+.historial-apuesta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+}
+.historial-apuesta strong { color: var(--gold); }
 
 .empty-msg {
     color: var(--text-muted);

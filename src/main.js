@@ -134,12 +134,25 @@ function handlePunto(teamIndex) {
  */
 function handleVale(callerIndex) {
     if (!game.reglas) {
-        const winner = game.addVale(callerIndex);
-        renderPorotos(game, callerIndex);
-        setTimeout(() => animateLastPoroto(callerIndex), 30);
-        updateLimitDisplay(game);
-        if (winner !== null) endGame(winner);
-        else playVale();
+        // Marcar los 4 índices como vale antes de animar
+        const start = game.scores[callerIndex];
+        for (let i = start; i < start + 4; i++) {
+            game.valeIndices[callerIndex].add(i);
+        }
+        let step = 0;
+        const interval = setInterval(function () {
+            game.scores[callerIndex]++;
+            renderPorotos(game, callerIndex);
+            animateLastPoroto(callerIndex);
+            updateLimitDisplay(game);
+            step++;
+            if (step === 4 || game.getWinner() !== null) {
+                clearInterval(interval);
+                const winner = game.getWinner();
+                if (winner !== null) endGame(winner);
+                else playVale();
+            }
+        }, 125);
         return;
     }
     pendingVale = { callerIndex };
@@ -199,6 +212,15 @@ function endGame(winnerIndex) {
         durmioEl.classList.remove('hidden');
     } else {
         durmioEl.classList.add('hidden');
+    }
+
+    const apuestaEl = document.getElementById('resultado-apuesta');
+    const apuesta   = game.reglas && game.reglas.apuesta;
+    if (apuesta) {
+        document.getElementById('resultado-apuesta-texto').textContent = apuesta;
+        apuestaEl.classList.remove('hidden');
+    } else {
+        apuestaEl.classList.add('hidden');
     }
 
     // Score de serie
