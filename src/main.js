@@ -1,6 +1,6 @@
 import './style.css';
 import { Game } from './game.js';
-import { saveRecord, getAllRecords, clearRecords } from './storage.js';
+import { saveRecord, getAllRecords, clearRecords, getHiddenMatchups, hideMatchup } from './storage.js';
 import {
     showScreen,
     renderPorotos,
@@ -50,6 +50,9 @@ let game = null;
 
 /** @type {object[]} Cache de datos de estadísticas por enfrentamiento */
 let estadisticasData = [];
+
+/** Criterio de orden de estadísticas: 'partidas' | 'fecha' */
+let sortBy = localStorage.getItem('truco-stats-sort') || 'partidas';
 
 /** @type {{ callerIndex: number }|null} */
 let pendingVale = null;
@@ -409,10 +412,19 @@ function updatePlaceholders() {
  * Carga y muestra la pantalla de estadísticas por enfrentamiento.
  */
 function showEstadisticas() {
-    estadisticasData = buildEstadisticasData(getAllRecords());
+    estadisticasData = buildEstadisticasData(getAllRecords(), getHiddenMatchups());
     document.getElementById('estadisticas-buscar').value = '';
+    updateSortBtn();
     renderEstadisticasLista('');
     showScreen('screen-estadisticas');
+}
+
+/**
+ * Actualiza el texto del botón de orden según el estado actual.
+ */
+function updateSortBtn() {
+    const btn = document.getElementById('btn-sort-stats');
+    btn.textContent = sortBy === 'partidas' ? '↓ partidas' : '↓ fecha';
 }
 
 /**
@@ -436,7 +448,13 @@ function renderEstadisticasLista(query) {
         lista.innerHTML = '<p class="empty-msg">No se encontraron resultados.</p>';
         return;
     }
-    lista.innerHTML = filtered.map(renderMatchupCard).join('');
+
+    const sorted = filtered.slice().sort(function (a, b) {
+        if (sortBy === 'fecha') return b.lastDate - a.lastDate;
+        return b.total - a.total || b.lastDate - a.lastDate;
+    });
+
+    lista.innerHTML = sorted.map(renderMatchupCard).join('');
 }
 
 // ── Helpers ───────────────────────────────────────────────────
@@ -713,6 +731,44 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.getElementById('estadisticas-buscar').addEventListener('input', function () {
         renderEstadisticasLista(this.value);
+    });
+
+    // Botón de orden
+    document.getElementById('btn-sort-stats').addEventListener('click', function () {
+        playTap();
+        sortBy = sortBy === 'partidas' ? 'fecha' : 'partidas';
+        localStorage.setItem('truco-stats-sort', sortBy);
+        updateSortBtn();
+        renderEstadisticasLista(document.getElementById('estadisticas-buscar').value);
+    });
+
+    // Borrar enfrentamiento — delegación en la lista
+    document.getElementById('estadisticas-lista').addEventListener('click', function (e) {
+        const btn = e.target.closest('.btn-matchup-delete');
+        if (!btn) return;
+        playTap();
+        const key = btn.dataset.key;
+        const card = btn.closest('.matchup-card');
+        const teams = card.querySelector('.matchup-teams').textContent;
+        document.getElementById('modal-matchup-titulo').textContent = teams;
+        const modal = document.getElementById('modal-borrar-matchup');
+        modal._pendingKey = key;
+        modal.classList.remove('hidden');
+    });
+
+    document.getElementById('btn-matchup-confirmar').addEventListener('click', function () {
+        const modal = document.getElementById('modal-borrar-matchup');
+        const key = modal._pendingKey;
+        modal._pendingKey = null;
+        modal.classList.add('hidden');
+        hideMatchup(key);
+        estadisticasData = buildEstadisticasData(getAllRecords(), getHiddenMatchups());
+        renderEstadisticasLista(document.getElementById('estadisticas-buscar').value);
+    });
+
+    document.getElementById('btn-matchup-cancelar').addEventListener('click', function () {
+        playTap();
+        document.getElementById('modal-borrar-matchup').classList.add('hidden');
     });
 
     // Modal confirmar borrar historial

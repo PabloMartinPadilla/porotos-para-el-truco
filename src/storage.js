@@ -1,4 +1,4 @@
-import { STORAGE_KEY } from './constants.js';
+import { STORAGE_KEY, HIDDEN_MATCHUPS_KEY } from './constants.js';
 
 /**
  * Guarda un registro de partida al inicio de la lista en localStorage.
@@ -27,4 +27,23 @@ export function getAllRecords() {
  */
 export function clearRecords() {
     localStorage.removeItem(STORAGE_KEY);
+}
+
+/**
+ * Devuelve el Set de claves de enfrentamientos ocultos en estadísticas.
+ * @returns {Set<string>}
+ */
+export function getHiddenMatchups() {
+    try { return new Set(JSON.parse(localStorage.getItem(HIDDEN_MATCHUPS_KEY)) || []); }
+    catch { return new Set(); }
+}
+
+/**
+ * Oculta un enfrentamiento de la pantalla de estadísticas (sin borrar el historial).
+ * @param {string} key - Clave canónica del enfrentamiento.
+ */
+export function hideMatchup(key) {
+    const hidden = getHiddenMatchups();
+    hidden.add(key);
+    localStorage.setItem(HIDDEN_MATCHUPS_KEY, JSON.stringify([...hidden]));
 }

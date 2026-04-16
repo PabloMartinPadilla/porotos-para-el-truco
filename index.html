@@ -212,6 +212,7 @@
 
         <div class="estadisticas-search">
             <input type="text" id="estadisticas-buscar" placeholder="Buscar jugador..." autocomplete="off">
+            <button class="btn-sort" id="btn-sort-stats" title="Cambiar orden"></button>
         </div>
 
         <div id="estadisticas-lista"></div>
@@ -287,6 +288,18 @@
 
             <button class="btn-primary" id="btn-confirmar-reglas">Listo, empezar</button>
 
+        </div>
+    </div>
+
+    <!-- ── Modal: Confirmar borrar enfrentamiento ────────────── -->
+    <div id="modal-borrar-matchup" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-caller" id="modal-matchup-titulo">¿Borrar enfrentamiento?</div>
+            <div class="modal-subtitle">Los registros quedan en el historial</div>
+            <div class="modal-actions">
+                <button class="btn-rechazo" id="btn-matchup-confirmar">Sí, borrar</button>
+                <button class="btn-acepto" id="btn-matchup-cancelar">Cancelar</button>
+            </div>
         </div>
     </div>
 

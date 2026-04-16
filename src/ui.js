@@ -176,12 +176,14 @@ export function renderHistorialSerie(serieRecords, indices) {
 
 /**
  * Procesa todos los registros y devuelve datos de estadísticas por enfrentamiento.
- * Excluye partidas donde CUALQUIER equipo tiene nombre predeterminado.
- * Solo vs dupla se cuentan por separado.
+ * Excluye partidas donde CUALQUIER equipo tiene nombre predeterminado y los
+ * enfrentamientos cuya clave esté en hiddenMatchups.
  * @param {object[]} records - Todos los registros guardados.
- * @returns {object[]} Array de matchups con stats agregadas.
+ * @param {Set<string>} hiddenMatchups - Claves de enfrentamientos ocultos.
+ * @returns {object[]} Array de matchups con stats agregadas (sin ordenar).
  */
-export function buildEstadisticasData(records) {
+export function buildEstadisticasData(records, hiddenMatchups) {
+    const hidden  = hiddenMatchups || new Set();
     const validos = records.filter(function (r) {
         return !r.teamNames.some(function (n) { return NOMBRES_DEFAULT.has(n.trim()); });
     });
@@ -195,16 +197,19 @@ export function buildEstadisticasData(records) {
 
         // Clave canónica: nombres ordenados alfabéticamente + tipo
         const sortedLower = namesLower.slice().sort();
-        const key = sortedLower[0] + '\x00' + sortedLower[1] + '\x00' + tipo;
+        const key = sortedLower[0] + '|||' + sortedLower[1] + '|||' + tipo;
+
+        if (hidden.has(key)) return;
 
         // ¿Están invertidos respecto al orden canónico?
         const isSwapped = namesLower[0] !== sortedLower[0];
 
         if (!matchupMap.has(key)) {
             matchupMap.set(key, {
+                key:       key,
                 teamNames: isSwapped ? [names[1], names[0]] : [names[0], names[1]],
-                tipo: tipo,
-                games: [],
+                tipo:      tipo,
+                games:     [],
             });
         }
 
@@ -244,6 +249,7 @@ export function buildEstadisticasData(records) {
         }
 
         result.push({
+            key:        m.key,
             teamNames:  m.teamNames,
             tipo:       m.tipo,
             total:      m.games.length,
@@ -253,11 +259,6 @@ export function buildEstadisticasData(records) {
             streakTeam: streakTeam,
             lastDate:   new Date(m.games[m.games.length - 1].date),
         });
-    });
-
-    // Ordenar: más partidas primero, desempate por más reciente
-    result.sort(function (a, b) {
-        return b.total - a.total || b.lastDate - a.lastDate;
     });
 
     return result;
@@ -284,10 +285,15 @@ export function renderMatchupCard(m) {
         '<span>' + pct1 + '%</span>' +
     '</div>';
 
+    const keyAttr = ' data-key="' + m.key.replace(/"/g, '&quot;') + '"';
+
     return '<div class="matchup-card">' +
         '<div class="matchup-header">' +
             '<span class="matchup-teams">' + m.teamNames[0] + ' vs ' + m.teamNames[1] + '</span>' +
-            '<span class="matchup-tipo">' + m.tipo + '</span>' +
+            '<div class="matchup-header-right">' +
+                '<span class="matchup-tipo">' + m.tipo + '</span>' +
+                '<button class="btn-matchup-delete"' + keyAttr + ' title="Borrar enfrentamiento">&#x2715;</button>' +
+            '</div>' +
         '</div>' +
         '<div class="matchup-stats">' +
             '<span class="matchup-score">' + m.wins[0] + '\u2013' + m.wins[1] + '</span>' +
