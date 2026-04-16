@@ -54,6 +54,9 @@ let estadisticasData = [];
 /** @type {{ callerIndex: number }|null} */
 let pendingVale = null;
 
+/** Bloquea los botones de acción mientras el vale cuatro está animándose. */
+let animating = false;
+
 /**
  * Indica si el juego en curso fue lanzado desde el historial (revancha).
  * Permite que el gesto "volver atrás" regrese al historial en vez de inicio.
@@ -84,14 +87,13 @@ function launchGame(reglas) {
     cameFromHistorial = false;
     const name0   = document.getElementById('input-team0').value.trim() || 'Nosotros';
     const name1   = document.getElementById('input-team1').value.trim() || 'Ellos';
-    const tipo0   = getTipo();
-    const tipo1   = getTipo();
+    const tipo    = getTipo();
     const limitEl = document.querySelector('input[name="limit"]:checked');
     const limit   = limitEl ? +limitEl.value : 30;
 
     game = new Game({
         teamNames: [name0, name1],
-        isDupla:   [tipo0 === 'dupla', tipo1 === 'dupla'],
+        isDupla:   [tipo === 'dupla', tipo === 'dupla'],
         limit,
         reglas,
         serieId:   newSerieId(),
@@ -120,6 +122,7 @@ function launchGame(reglas) {
  * @param {number} teamIndex - Índice del equipo (0 o 1).
  */
 function handlePunto(teamIndex) {
+    if (animating) return;
     const winner = game.addPoint(teamIndex);
     renderPorotos(game, teamIndex);
     animateLastPoroto(teamIndex);
@@ -129,30 +132,41 @@ function handlePunto(teamIndex) {
 }
 
 /**
+ * Anima el vale cuatro sumando los 4 porotos de a uno (125ms cada uno).
+ * Compartido entre modo normal y modo competitivo.
+ * @param {number} callerIndex - Índice del equipo que cantó el vale.
+ */
+function animateVale(callerIndex) {
+    animating = true;
+    let step = 0;
+    const interval = setInterval(function () {
+        game.scores[callerIndex]++;
+        renderPorotos(game, callerIndex);
+        animateLastPoroto(callerIndex);
+        updateLimitDisplay(game);
+        step++;
+        if (step === 4 || game.getWinner() !== null) {
+            clearInterval(interval);
+            animating = false;
+            const winner = game.getWinner();
+            if (winner !== null) endGame(winner);
+            else playVale();
+        }
+    }, 125);
+}
+
+/**
  * Aplica el vale cuatro. En modo competitivo muestra confirmación; si no, suma directo.
  * @param {number} callerIndex - Índice del equipo que cantó el vale.
  */
 function handleVale(callerIndex) {
+    if (animating) return;
     if (!game.reglas) {
-        // Marcar los 4 índices como vale antes de animar
         const start = game.scores[callerIndex];
         for (let i = start; i < start + 4; i++) {
             game.valeIndices[callerIndex].add(i);
         }
-        let step = 0;
-        const interval = setInterval(function () {
-            game.scores[callerIndex]++;
-            renderPorotos(game, callerIndex);
-            animateLastPoroto(callerIndex);
-            updateLimitDisplay(game);
-            step++;
-            if (step === 4 || game.getWinner() !== null) {
-                clearInterval(interval);
-                const winner = game.getWinner();
-                if (winner !== null) endGame(winner);
-                else playVale();
-            }
-        }, 125);
+        animateVale(callerIndex);
         return;
     }
     pendingVale = { callerIndex };
@@ -166,20 +180,18 @@ function handleVale(callerIndex) {
 }
 
 /**
- * Confirma el vale cuatro: aplica los 4 puntos y cierra el modal.
+ * Confirma el vale cuatro (modo competitivo): marca índices y anima de a uno.
  */
 function acceptVale() {
     if (!pendingVale) return;
     const callerIndex = pendingVale.callerIndex;
     pendingVale = null;
     document.getElementById('modal-vale').classList.add('hidden');
-
-    const winner = game.addVale(callerIndex);
-    renderPorotos(game, callerIndex);
-    setTimeout(() => animateLastPoroto(callerIndex), 30);
-    updateLimitDisplay(game);
-    if (winner !== null) endGame(winner);
-    else playVale();
+    const start = game.scores[callerIndex];
+    for (let i = start; i < start + 4; i++) {
+        game.valeIndices[callerIndex].add(i);
+    }
+    animateVale(callerIndex);
 }
 
 /**
@@ -591,6 +603,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     document.querySelectorAll('.btn-restar').forEach(function (btn) {
         btn.addEventListener('click', function () {
+            if (animating) return;
             const teamIndex = +btn.dataset.team;
             game.removePoint(teamIndex);
             renderPorotos(game, teamIndex);

@@ -100,44 +100,6 @@ export function animateLastPoroto(teamIndex) {
 const NOMBRES_DEFAULT = new Set(['Nosotros', 'Ellos', 'Yo', 'Vos']);
 
 /**
- * Renderiza el bloque de estadísticas generales del historial.
- * Excluye partidas donde ambos equipos tienen nombres predeterminados.
- * @param {object[]} records - Todos los registros guardados.
- * @returns {string} HTML del bloque, o '' si no hay datos.
- */
-export function renderHistorialStats(records) {
-    const validos = records.filter(function (r) {
-        return !r.teamNames.every(function (n) { return NOMBRES_DEFAULT.has(n); });
-    });
-
-    if (validos.length === 0) return '';
-
-    const partidas = validos.length;
-    const puntos   = validos.reduce(function (sum, r) {
-        return sum + r.scores[0] + r.scores[1];
-    }, 0);
-    const series   = new Set(validos.filter(function (r) { return r.serieId; }).map(function (r) { return r.serieId; })).size;
-
-    return '<div class="historial-stats">' +
-        '<div class="historial-stats-title">estadísticas</div>' +
-        '<div class="historial-stats-grid">' +
-            '<div class="stat-item">' +
-                '<span class="stat-value">' + partidas + '</span>' +
-                '<span class="stat-label">partidas</span>' +
-            '</div>' +
-            (series > 1 ? '<div class="stat-item">' +
-                '<span class="stat-value">' + series + '</span>' +
-                '<span class="stat-label">series</span>' +
-            '</div>' : '') +
-            '<div class="stat-item">' +
-                '<span class="stat-value">' + puntos + '</span>' +
-                '<span class="stat-label">puntos</span>' +
-            '</div>' +
-        '</div>' +
-    '</div>';
-}
-
-/**
  * Genera el HTML de un ítem del historial de partidas.
  * @param {object} r - Registro de partida.
  * @param {number} idx - Índice en el array de registros (para la revancha).
@@ -192,7 +154,6 @@ export function renderHistorialSerie(serieRecords, indices) {
         const timeStr  = date.toLocaleTimeString('es-UY', { hour: '2-digit', minute: '2-digit' });
         const wi = r.winner;
         const li = 1 - wi;
-        const num = r.isRevancha ? 'rev' : 'P' + (k + 1 - serieRecords.slice(0, k).filter(function(x){ return !x.isRevancha; }).length);
         return '<div class="historial-serie-game">' +
             '<span class="historial-serie-game-num">' + (k + 1) + '</span>' +
             '<span class="historial-serie-game-date">' + dateStr + ' ' + timeStr + '</span>' +
