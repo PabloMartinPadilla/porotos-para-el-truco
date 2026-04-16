@@ -325,7 +325,25 @@ input {
     gap: 20px;
 }
 
-.modal-reglas-header { display: flex; flex-direction: column; gap: 4px; }
+.modal-reglas-header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    position: relative;
+}
+
+.btn-modal-cerrar {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.btn-modal-cerrar:hover { color: var(--text-muted); }
 
 .reglas-lista {
     display: flex;
@@ -1267,6 +1285,39 @@ input {
     margin-top: 4px;
 }
 .historial-apuesta strong { color: var(--gold); }
+
+.apuesta-field {
+    width: 100%;
+    padding: 10px 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+}
+.apuesta-label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+}
+.apuesta-opcional {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+.apuesta-input {
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    padding: 5px 0;
+    color: var(--text);
+    font-size: 0.85rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s;
+}
+.apuesta-input:focus  { border-color: var(--border-light); }
+.apuesta-input::placeholder { color: var(--text-dim); }
+.apuesta-input:disabled { opacity: 0.6; cursor: default; }
 
 .empty-msg {
     color: var(--text-muted);

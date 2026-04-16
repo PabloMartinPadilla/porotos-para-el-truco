@@ -248,7 +248,7 @@ function endGame(winnerIndex) {
  * Lanza mates flotantes sobre la pantalla de resultado.
  */
 function celebrarGanador() {
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 18; i++) {
         const el = document.createElement('div');
         el.className = 'mate-particle';
         el.textContent = '🧉';
@@ -480,6 +480,17 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('btn-empezar').addEventListener('click', function () {
         playTap();
         startGame();
+    });
+
+    document.getElementById('btn-reglas-cerrar').addEventListener('click', function () {
+        playTap();
+        const modal = document.getElementById('modal-reglas');
+        delete modal.dataset.vistaActiva;
+        modal.classList.add('hidden');
+        document.getElementById('btn-confirmar-reglas').textContent = 'Listo, empezar';
+        document.getElementById('btn-confirmar-reglas').onclick = null;
+        modal.querySelectorAll('.regla-check').forEach(function (el) { el.disabled = false; });
+        document.getElementById('input-apuesta').disabled = false;
     });
 
     document.getElementById('btn-confirmar-reglas').addEventListener('click', function () {
