@@ -3,7 +3,8 @@
  * Todos los sonidos son generados programáticamente.
  */
 
-const STORAGE_KEY = 'truco-muted';
+const STORAGE_KEY  = 'truco-muted';
+const VIBRATE_KEY  = 'truco-vibrate';
 
 /** @type {AudioContext|null} */
 let ctx = null;
@@ -29,6 +30,18 @@ export function toggleMute() {
     return muted;
 }
 
+/** La vibración está activa si no fue apagada explícitamente (default ON). */
+export function isVibrating() {
+    return localStorage.getItem(VIBRATE_KEY) !== '0';
+}
+
+/** Alterna vibración. Retorna true si quedó activa. */
+export function toggleVibrate() {
+    const active = !isVibrating();
+    localStorage.setItem(VIBRATE_KEY, active ? '1' : '0');
+    return active;
+}
+
 /**
  * Reproduce un tono simple.
  * @param {{ freq: number, freqEnd?: number, duration: number, type?: OscillatorType, gain?: number, startDelay?: number }} opts
@@ -52,24 +65,36 @@ function playTone({ freq, freqEnd, duration, type = 'triangle', gain = 0.28, sta
     osc.stop(t + duration + 0.01);
 }
 
+/**
+ * Vibración háptica — no hace nada en iOS ni en escritorio.
+ * @param {number|number[]} pattern - ms de vibración, o patrón [vibrar, pausa, vibrar, ...]
+ */
+function vibrate(pattern) {
+    if (navigator.vibrate && isVibrating()) navigator.vibrate(pattern);
+}
+
 /** Toque de UI genérico — navegación, botones de formulario */
 export function playTap() {
     playTone({ freq: 520, freqEnd: 380, duration: 0.07, type: 'sine', gain: 0.12 });
+    vibrate(8);
 }
 
 /** Toggle / selección — radios y checkboxes */
 export function playToggle() {
     playTone({ freq: 440, freqEnd: 560, duration: 0.08, type: 'sine', gain: 0.10 });
+    vibrate(8);
 }
 
 /** +1 punto — pop corto ascendente */
 export function playPunto() {
     playTone({ freq: 280, freqEnd: 420, duration: 0.13, type: 'triangle', gain: 0.25 });
+    vibrate(25);
 }
 
 /** -1 punto — bip descendente suave */
 export function playRestar() {
     playTone({ freq: 220, freqEnd: 140, duration: 0.14, type: 'sine', gain: 0.18 });
+    vibrate(15);
 }
 
 /** Vale cuatro confirmado — fanfarria ascendente (4 notas) */
@@ -78,6 +103,7 @@ export function playVale() {
     [261, 330, 392, 523].forEach((freq, i) => {
         playTone({ freq, duration: 0.18, type: 'triangle', gain: 0.28, startDelay: i * 0.13 });
     });
+    vibrate([40, 30, 40, 30, 80]);
 }
 
 /** Fin de partida — melodía corta de victoria */
@@ -97,4 +123,5 @@ export function playGanador() {
         playTone({ freq, duration: dur, type: 'triangle', gain: 0.30, startDelay: t });
         t += dur * 0.88;
     });
+    vibrate([60, 40, 60, 40, 120]);
 }

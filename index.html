@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Porotos para el Truco</title>
+    <title>Porotos pal Truco</title>
     <link rel="icon" href="icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -19,12 +19,13 @@
         <div class="inicio-corner-btns">
             <button class="btn-theme" id="btn-theme-inicio" title="Tema claro">&#x25D1;</button>
             <button class="btn-sound" id="btn-sound-inicio" title="Silenciar / activar sonido">&#9834;</button>
+            <button class="btn-vibrate" id="btn-vibrate-inicio" title="Activar / apagar vibración">&#x224B;</button>
         </div>
 
         <div class="inicio-header">
             <img src="icon.svg" alt="truco" class="logo">
             <h1>POROTOS</h1>
-            <p>para el truco</p>
+            <p>pal truco</p>
             <span class="app-version" id="app-version"></span>
         </div>
 
@@ -89,6 +90,7 @@
                 <div class="juego-header-nav">
                     <button class="btn-theme" id="btn-theme-juego" title="Tema claro">&#x25D1;</button>
                     <button class="btn-sound" id="btn-sound" title="Silenciar / activar sonido">&#9834;</button>
+                    <button class="btn-vibrate" id="btn-vibrate-juego" title="Activar / apagar vibración">&#x224B;</button>
                     <button class="btn-inicio" id="btn-inicio-desde-juego" title="Volver al inicio">&#8962;</button>
                 </div>
             </div>
@@ -189,6 +191,10 @@
 
         <div id="historial-lista"></div>
 
+        <div id="historial-footer" class="historial-footer hidden">
+            <button class="btn-borrar-historial" id="btn-borrar-historial">Borrar historial</button>
+        </div>
+
     </div>
 
     <!-- ── Pantalla: Estadísticas ────────────────────────────── -->
@@ -271,6 +277,30 @@
 
             <button class="btn-primary" id="btn-confirmar-reglas">Listo, empezar</button>
 
+        </div>
+    </div>
+
+    <!-- ── Modal: Confirmar borrar historial ─────────────────── -->
+    <div id="modal-borrar-historial" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-caller">¿Borrar todo el historial?</div>
+            <div class="modal-subtitle">Esta acción no se puede deshacer</div>
+            <div class="modal-actions">
+                <button class="btn-rechazo" id="btn-borrar-confirmar">Sí, borrar todo</button>
+                <button class="btn-acepto" id="btn-borrar-cancelar">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Modal: Confirmar salir ────────────────────────────── -->
+    <div id="modal-salir" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-caller">¿Salir de la partida?</div>
+            <div class="modal-subtitle">Se perderá el progreso actual</div>
+            <div class="modal-actions">
+                <button class="btn-rechazo" id="btn-salir-confirmar">Sí, salir</button>
+                <button class="btn-acepto" id="btn-salir-cancelar">Seguir jugando</button>
+            </div>
         </div>
     </div>
 

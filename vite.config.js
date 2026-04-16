@@ -13,7 +13,7 @@ export default defineConfig({
             registerType: 'autoUpdate',
             includeAssets: ['icon.svg', 'icons/apple-touch-icon.png'],
             manifest: {
-                name: 'Porotos para el Truco',
+                name: 'Porotos pal Truco',
                 short_name: 'Porotos',
                 description: 'Tanteador de Truco con estética campera uruguaya',
                 theme_color: '#130e05',

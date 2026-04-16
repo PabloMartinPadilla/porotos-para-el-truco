@@ -1,6 +1,6 @@
 import './style.css';
 import { Game } from './game.js';
-import { saveRecord, getAllRecords } from './storage.js';
+import { saveRecord, getAllRecords, clearRecords } from './storage.js';
 import {
     showScreen,
     renderPorotos,
@@ -28,7 +28,21 @@ import {
     playGanador,
     isMuted,
     toggleMute,
+    isVibrating,
+    toggleVibrate,
 } from './sounds.js';
+
+// ── Helpers para confirmar salida de partida ─────────────────
+
+/**
+ * Muestra el modal de confirmación de salida.
+ * @param {Function} onConfirm - Callback que se ejecuta si el usuario confirma.
+ */
+function confirmSalir(onConfirm) {
+    const modal = document.getElementById('modal-salir');
+    modal.classList.remove('hidden');
+    modal._onConfirm = onConfirm;
+}
 
 // ── Estado global de la partida ──────────────────────────────
 /** @type {Game|null} */
@@ -195,7 +209,25 @@ function endGame(winnerIndex) {
         serieEl.classList.add('hidden');
     }
 
+    celebrarGanador();
     showScreen('screen-resultado');
+}
+
+/**
+ * Lanza mates flotantes sobre la pantalla de resultado.
+ */
+function celebrarGanador() {
+    for (let i = 0; i < 7; i++) {
+        const el = document.createElement('div');
+        el.className = 'mate-particle';
+        el.textContent = '🧉';
+        el.style.left         = (8 + Math.random() * 84) + '%';
+        el.style.fontSize     = (1.4 + Math.random() * 1.0) + 'rem';
+        el.style.animationDelay    = (Math.random() * 0.7) + 's';
+        el.style.animationDuration = (2.0 + Math.random() * 0.8) + 's';
+        document.body.appendChild(el);
+        el.addEventListener('animationend', function () { el.remove(); });
+    }
 }
 
 /**
@@ -205,11 +237,16 @@ function showHistorial() {
     const records = getAllRecords();
     const lista   = document.getElementById('historial-lista');
 
+    const footer = document.getElementById('historial-footer');
+
     if (records.length === 0) {
         lista.innerHTML = '<p class="empty-msg">Todavía no hay partidas guardadas.</p>';
+        footer.classList.add('hidden');
         showScreen('screen-historial');
         return;
     }
+
+    footer.classList.remove('hidden');
 
     // Agrupar por serieId; records sin serieId van solos
     const groups = [];
@@ -371,6 +408,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
     updateSoundBtns();
+
+    // ── Botones de vibración (inicio + juego, sincronizados) ──
+    const vibrateBtns = document.querySelectorAll('.btn-vibrate');
+    function updateVibrateBtns() {
+        const off = !isVibrating();
+        vibrateBtns.forEach(function (btn) {
+            btn.classList.toggle('muted', off);
+            btn.title = off ? 'Activar vibración' : 'Apagar vibración';
+        });
+    }
+    vibrateBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            toggleVibrate();
+            updateVibrateBtns();
+            playTap();
+        });
+    });
+    updateVibrateBtns();
 
     // Toggle solo/dupla global
     document.querySelectorAll('input[name="tipo"]').forEach(function (radio) {
@@ -566,8 +621,48 @@ document.addEventListener('DOMContentLoaded', function () {
         renderEstadisticasLista(this.value);
     });
 
-    // Botones "volver al inicio" desde cualquier pantalla
-    ['btn-inicio-desde-juego', 'btn-inicio-desde-resultado', 'btn-inicio-desde-historial', 'btn-inicio-desde-estadisticas'].forEach(function (id) {
+    // Modal confirmar borrar historial
+    document.getElementById('btn-borrar-historial').addEventListener('click', function () {
+        playTap();
+        document.getElementById('modal-borrar-historial').classList.remove('hidden');
+    });
+    document.getElementById('btn-borrar-confirmar').addEventListener('click', function () {
+        document.getElementById('modal-borrar-historial').classList.add('hidden');
+        clearRecords();
+        showHistorial();
+    });
+    document.getElementById('btn-borrar-cancelar').addEventListener('click', function () {
+        playTap();
+        document.getElementById('modal-borrar-historial').classList.add('hidden');
+    });
+
+    // Modal confirmar salir
+    document.getElementById('btn-salir-confirmar').addEventListener('click', function () {
+        const modal = document.getElementById('modal-salir');
+        modal.classList.add('hidden');
+        const cb = modal._onConfirm;
+        modal._onConfirm = null;
+        if (cb) cb();
+    });
+    document.getElementById('btn-salir-cancelar').addEventListener('click', function () {
+        playTap();
+        document.getElementById('modal-salir').classList.add('hidden');
+        document.getElementById('modal-salir')._onConfirm = null;
+    });
+
+    // Botón ⌂ desde pantalla de juego — pide confirmación si hay partida activa
+    document.getElementById('btn-inicio-desde-juego').addEventListener('click', function () {
+        playTap();
+        if (game && game.getWinner() === null) {
+            confirmSalir(function () { game = null; showScreen('screen-inicio'); });
+        } else {
+            game = null;
+            showScreen('screen-inicio');
+        }
+    });
+
+    // Botones "volver al inicio" desde resultado, historial y estadísticas (sin partida activa)
+    ['btn-inicio-desde-resultado', 'btn-inicio-desde-historial', 'btn-inicio-desde-estadisticas'].forEach(function (id) {
         document.getElementById(id).addEventListener('click', function () {
             playTap();
             game = null;
@@ -599,8 +694,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     cameFromHistorial = false;
                     showHistorial();
                     history.pushState(null, '');
+                } else if (game && game.getWinner() === null) {
+                    // Partida en curso: pedir confirmación antes de descartar
+                    history.pushState(null, '');
+                    confirmSalir(function () { game = null; showScreen('screen-inicio'); });
                 } else {
-                    // Partida nueva desde inicio: volver al inicio y descartar
                     cameFromHistorial = false;
                     game = null;
                     showScreen('screen-inicio');

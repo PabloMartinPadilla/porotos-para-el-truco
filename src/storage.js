@@ -21,3 +21,10 @@ export function getAllRecords() {
         return [];
     }
 }
+
+/**
+ * Elimina todos los registros del historial.
+ */
+export function clearRecords() {
+    localStorage.removeItem(STORAGE_KEY);
+}

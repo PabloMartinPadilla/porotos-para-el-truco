@@ -165,7 +165,7 @@ export function renderHistorialItem(r, idx) {
             '<span class="historial-pts loser-pts">' + r.scores[li] + '</span>' +
             '<span class="historial-loser-name">' + r.teamNames[li] + '</span>' +
         '</div>' +
-        (r.durmioAfuera ? '<div class="historial-durmio">' + r.teamNames[li] + ' durmio afuera</div>' : '') +
+        (r.durmioAfuera ? '<div class="historial-durmio">' + r.teamNames[li] + ' durmió afuera</div>' : '') +
         '<button class="btn-hist-revancha" data-idx="' + idx + '">Revancha</button>' +
     '</div>';
 }

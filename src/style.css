@@ -683,6 +683,23 @@ input {
     text-decoration: line-through;
 }
 
+.btn-vibrate {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    padding: 4px 8px;
+    line-height: 1;
+    transition: all 0.15s;
+}
+.btn-vibrate:hover { border-color: var(--border-light); color: var(--text); }
+.btn-vibrate.muted {
+    color: var(--text-dim);
+    border-color: transparent;
+    text-decoration: line-through;
+}
+
 .teams-container {
     flex: 1;
     display: grid;
@@ -1579,3 +1596,43 @@ input {
     transition: color 0.15s;
 }
 .pwa-dismiss:hover { color: var(--text-muted); }
+
+/* ── Historial: footer borrar ───────────────────────────────── */
+.historial-footer {
+    padding: 16px 0 8px;
+    display: flex;
+    justify-content: center;
+}
+.historial-footer.hidden { display: none; }
+
+.btn-borrar-historial {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text-dim);
+    font-size: 0.75rem;
+    font-family: inherit;
+    letter-spacing: 0.06em;
+    padding: 7px 16px;
+    transition: all 0.2s;
+}
+.btn-borrar-historial:hover {
+    border-color: var(--accent);
+    color: var(--accent-light);
+}
+
+/* ── Celebración: mates flotantes ──────────────────────────── */
+@keyframes floatMate {
+    0%   { transform: translateY(0)      rotate(-5deg); opacity: 1;   }
+    60%  { opacity: 1; }
+    100% { transform: translateY(-60vh)  rotate(15deg); opacity: 0;   }
+}
+
+.mate-particle {
+    position: fixed;
+    bottom: 12%;
+    pointer-events: none;
+    user-select: none;
+    z-index: 9999;
+    animation: floatMate ease-out forwards;
+}
