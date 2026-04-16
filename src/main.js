@@ -245,20 +245,59 @@ function endGame(winnerIndex) {
 }
 
 /**
- * Lanza mates flotantes sobre la pantalla de resultado.
+ * Lanza mates desde todos los bordes y confeti en colores del tema.
  */
 function celebrarGanador() {
-    for (let i = 0; i < 18; i++) {
-        const el = document.createElement('div');
-        el.className = 'mate-particle';
-        el.textContent = '🧉';
-        el.style.left         = (8 + Math.random() * 84) + '%';
-        el.style.fontSize     = (1.4 + Math.random() * 1.0) + 'rem';
-        el.style.animationDelay    = (Math.random() * 0.7) + 's';
-        el.style.animationDuration = (2.0 + Math.random() * 0.8) + 's';
-        document.body.appendChild(el);
-        el.addEventListener('animationend', function () { el.remove(); });
+    for (let i = 0; i < 15; i++) spawnMate();
+    for (let i = 0; i < 55; i++) spawnConfetti();
+}
+
+function spawnMate() {
+    const el = document.createElement('div');
+    el.className = 'mate-particle';
+    el.textContent = '🧉';
+
+    const side = Math.floor(Math.random() * 3); // 0=abajo, 1=izquierda, 2=derecha
+    if (side === 0) {
+        el.style.left   = (5  + Math.random() * 90) + '%';
+        el.style.bottom = (Math.random() * 15) + '%';
+        el.style.setProperty('--tx', (Math.random() * 30 - 15) + 'vw');
+        el.style.setProperty('--ty', -(45 + Math.random() * 30) + 'vh');
+    } else if (side === 1) {
+        el.style.left   = (-4 + Math.random() * 8) + '%';
+        el.style.bottom = (10 + Math.random() * 65) + '%';
+        el.style.setProperty('--tx', (25 + Math.random() * 35) + 'vw');
+        el.style.setProperty('--ty', -(15 + Math.random() * 40) + 'vh');
+    } else {
+        el.style.left   = (92 + Math.random() * 8) + '%';
+        el.style.bottom = (10 + Math.random() * 65) + '%';
+        el.style.setProperty('--tx', -(25 + Math.random() * 35) + 'vw');
+        el.style.setProperty('--ty', -(15 + Math.random() * 40) + 'vh');
     }
+
+    el.style.fontSize          = (1.3 + Math.random() * 1.2) + 'rem';
+    el.style.animationDelay    = (Math.random() * 0.3) + 's';
+    el.style.animationDuration = (1.8 + Math.random() * 0.4) + 's';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', function () { el.remove(); });
+}
+
+function spawnConfetti() {
+    const colors = ['#d4a017', '#8b2500', '#c04010', '#3d5120', '#e8d5b0', '#a07810'];
+    const el = document.createElement('div');
+    el.className = 'confetti-particle';
+    el.style.left       = (15 + Math.random() * 70) + '%';
+    el.style.top        = (20 + Math.random() * 50) + '%';
+    el.style.background = colors[Math.floor(Math.random() * colors.length)];
+    el.style.width      = (5  + Math.random() * 6)  + 'px';
+    el.style.height     = (8  + Math.random() * 8)  + 'px';
+    el.style.setProperty('--tx',  (Math.random() * 240 - 120) + 'px');
+    el.style.setProperty('--ty',  (Math.random() * 240 - 120) + 'px');
+    el.style.setProperty('--rot', (Math.random() * 720 - 360) + 'deg');
+    el.style.animationDelay    = (Math.random() * 0.3) + 's';
+    el.style.animationDuration = (1.8 + Math.random() * 0.4) + 's';
+    document.body.appendChild(el);
+    el.addEventListener('animationend', function () { el.remove(); });
 }
 
 /**

@@ -1710,18 +1710,30 @@ input {
     color: var(--accent-light);
 }
 
-/* ── Celebración: mates flotantes ──────────────────────────── */
+/* ── Celebración: mates + confeti ───────────────────────────── */
 @keyframes floatMate {
-    0%   { transform: translateY(0)      rotate(-5deg); opacity: 1;   }
+    0%   { transform: translate(0, 0) rotate(-5deg); opacity: 1; }
     60%  { opacity: 1; }
-    100% { transform: translateY(-60vh)  rotate(15deg); opacity: 0;   }
+    100% { transform: translate(var(--tx, 0), var(--ty, -60vh)) rotate(15deg); opacity: 0; }
 }
 
 .mate-particle {
     position: fixed;
-    bottom: 12%;
     pointer-events: none;
     user-select: none;
-    z-index: 9999;
+    z-index: 9998;
     animation: floatMate ease-out forwards;
+}
+
+@keyframes shootConfetti {
+    0%   { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+    100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.4); opacity: 0; }
+}
+
+.confetti-particle {
+    position: fixed;
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 9999;
+    animation: shootConfetti ease-out forwards;
 }
