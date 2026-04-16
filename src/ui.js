@@ -281,27 +281,14 @@ export function buildEstadisticasData(records) {
             }
         }
 
-        // Para mostrar: el líder (más victorias) siempre primero
-        var teamNames  = m.teamNames;
-        var winsDisp   = wins;
-        var ptsDisp    = points;
-        var streakDisp = streakTeam;
-
-        if (wins[1] > wins[0]) {
-            teamNames  = [m.teamNames[1], m.teamNames[0]];
-            winsDisp   = [wins[1], wins[0]];
-            ptsDisp    = [points[1], points[0]];
-            streakDisp = streakTeam === 0 ? 1 : 0;
-        }
-
         result.push({
-            teamNames:  teamNames,
+            teamNames:  m.teamNames,
             tipo:       m.tipo,
             total:      m.games.length,
-            wins:       winsDisp,
-            points:     ptsDisp,
+            wins:       wins,
+            points:     points,
             streak:     streak,
-            streakTeam: streakDisp,
+            streakTeam: streakTeam,
             lastDate:   new Date(m.games[m.games.length - 1].date),
         });
     });

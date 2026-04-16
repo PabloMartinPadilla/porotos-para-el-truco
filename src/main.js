@@ -129,10 +129,19 @@ function handlePunto(teamIndex) {
 }
 
 /**
- * Muestra el modal de confirmación del vale cuatro.
+ * Aplica el vale cuatro. En modo competitivo muestra confirmación; si no, suma directo.
  * @param {number} callerIndex - Índice del equipo que cantó el vale.
  */
 function handleVale(callerIndex) {
+    if (!game.reglas) {
+        const winner = game.addVale(callerIndex);
+        renderPorotos(game, callerIndex);
+        setTimeout(() => animateLastPoroto(callerIndex), 30);
+        updateLimitDisplay(game);
+        if (winner !== null) endGame(winner);
+        else playVale();
+        return;
+    }
     pendingVale = { callerIndex };
     const callerName = game.teamNames[callerIndex];
     const rivalName  = game.teamNames[1 - callerIndex];
