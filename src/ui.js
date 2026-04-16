@@ -320,10 +320,20 @@ export function buildEstadisticasData(records) {
  * @returns {string} HTML string.
  */
 export function renderMatchupCard(m) {
-    const dateStr  = m.lastDate.toLocaleDateString('es-UY', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    const dateStr   = m.lastDate.toLocaleDateString('es-UY', { day: '2-digit', month: '2-digit', year: 'numeric' });
     const rachaHtml = m.streak >= 2
         ? '<div class="matchup-racha">racha: <strong>' + m.teamNames[m.streakTeam] + '</strong> \xd7' + m.streak + '</div>'
         : '';
+
+    const pct0 = m.total > 0 ? Math.round(m.wins[0] / m.total * 100) : 0;
+    const pct1 = 100 - pct0;
+    const pctHtml = '<div class="matchup-pct-bar">' +
+        '<div class="matchup-pct-fill" style="width:' + pct0 + '%"></div>' +
+    '</div>' +
+    '<div class="matchup-pct-labels">' +
+        '<span>' + pct0 + '%</span>' +
+        '<span>' + pct1 + '%</span>' +
+    '</div>';
 
     return '<div class="matchup-card">' +
         '<div class="matchup-header">' +
@@ -337,6 +347,7 @@ export function renderMatchupCard(m) {
             '<span class="matchup-score">' + m.points[0] + '\u2013' + m.points[1] + '</span>' +
             '<span class="matchup-stat-label">puntos</span>' +
         '</div>' +
+        pctHtml +
         rachaHtml +
         '<div class="matchup-last">última: ' + dateStr + '</div>' +
     '</div>';
