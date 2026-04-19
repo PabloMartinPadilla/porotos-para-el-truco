@@ -719,6 +719,10 @@ input {
     gap: 12px;
     border-right: 1px solid var(--border);
     min-height: 0;
+    cursor: pointer;
+    touch-action: manipulation;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .team:last-child { border-right: none; }
