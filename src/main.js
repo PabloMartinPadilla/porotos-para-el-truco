@@ -615,6 +615,15 @@ document.addEventListener('DOMContentLoaded', function () {
         btn.addEventListener('click', function () { handlePunto(+btn.dataset.team); });
     });
 
+    document.querySelectorAll('.team').forEach(function (teamEl) {
+        teamEl.addEventListener('click', function (e) {
+            if (e.target.closest('.team-actions')) return;
+            if (!game) return;
+            playTap();
+            handlePunto(+teamEl.dataset.team);
+        });
+    });
+
     document.querySelectorAll('.btn-vale').forEach(function (btn) {
         btn.addEventListener('click', function () { handleVale(+btn.dataset.team); });
     });
