@@ -55,7 +55,7 @@
 [data-theme="light"] .check-label input:checked + .check-box::after { border-color: #f0e4ca; }
 
 /* ── Reset & base ──────────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
 html, body {
     height: 100%;
